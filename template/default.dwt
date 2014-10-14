@@ -1,0 +1,18 @@
+<script type="text/javascript" src="{PATH}/js/scripts.js"></script>
+<style type="text/css">
+#span_welcome {
+    position: absolute;
+    height: 75px;
+    top: 40%;
+    left: 40%;
+    color: #B7B7B7;
+    font-size: 30px;
+    font-weight:bold;
+ }
+</style>
+<div id="rep_menu" class="menu" style="border:#FFFFFF solid thin;">
+<h3>Menu Reportes</h3>
+</div><!--adm_menu-->
+<div id="rep_content" class="pestana_contenido">
+	<span id="span_welcome">Seleccione una opción del Menú</span>
+</div><!--adm_content-->

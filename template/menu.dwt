@@ -1,0 +1,14 @@
+<script type="text/javascript" src="{PATH}/js/scripts.js"></script>
+<script>
+$(function() {
+	$( "#menu_rep" ).menu();
+  });
+</script>
+<style>
+.ui-menu { width: 100%; height:100% }
+</style>
+<ul id="menu_rep">
+	<!-- BEGIN submenu -->
+	<li onClick="rep_abrir_modulo('{submenu.LNK}')"><a href="#">{submenu.SMN}</a></li>
+    <!-- END submenu -->
+</ul>  
