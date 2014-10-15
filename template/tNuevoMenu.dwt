@@ -1,0 +1,9 @@
+<script type="text/javascript">
+	$(document).ready(function(){
+		//$("#acordeonMenuReportes").accordion();	
+	})
+</script>
+<div id="acordeonMenuReportes">
+	{MENUR}
+</div>
+<p>&nbsp;</p>

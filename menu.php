@@ -8,15 +8,13 @@
  *  @modificado          23-04-2012
 **/
 	$db = new sql($config_bd['host'],$config_bd['port'],$config_bd['bname'],$config_bd['user'],$config_bd['pass']);
-	
 	$userAdmin->u_logged();
-	
-	echo "<pre>";
-	print_r($_POST);
-	echo "</pre>";
-
+	/*echo "<pre>";
+	print_r($userAdmin);
+	echo "</pre>";*/
 	$id_profile = $userAdmin->user_info['ID_PERFIL'];
 	$id_cliente = $userAdmin->user_info['ID_CLIENTE'];
+	$id_usuario = $userAdmin->user_info['ID_USUARIO'];
 	
 	$tpl->set_filenames(array('menu'=>'menu'));		
 	
@@ -32,10 +30,10 @@
 	if($count>0){
 		while($row = $db->sqlFetchArray($query)){
 			$tpl->assign_block_vars('submenu',array(
-					'IDS'	=> $row['ID_SUBMENU'],
-					'SMN'	=> utf8_encode($row['DESCRIPTION']),
-					'LNK'	=> $row['UBICACION']
-					
+					'IDS'		=> $row['ID_SUBMENU'],
+					'SMN'		=> utf8_encode($row['DESCRIPTION']),
+					'LNK'		=> $row['UBICACION'],
+					'IDCLIENTE'	=> $id_cliente
 			));
 		}
 	}
@@ -44,13 +42,6 @@
 		'PATH'			=> $dir_mod,
 		'PATH_IMG'		=> $dir_pimages,
 	));	
-
-
-	if($_POST["action"]=="mostrarNuevoMenu"){
-		//echo $sqlReportesMenu = "SELECT NOMBRE_REPORTES_MENU FROM ADM_REPORTES_MENU WHERE ID_CLIENTE='".$id_cliente."'";
-		//$resReportesMenu = $db->sqlQuery($sqlReportesMenu);
-
-	}
 
 	$tpl->pparse('menu');
 ?>

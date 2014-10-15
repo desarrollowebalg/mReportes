@@ -10,6 +10,7 @@
  *  @author              Gerardo Lara
 **/
 	$db = new sql($config_bd['host'],$config_bd['port'],$config_bd['bname'],$config_bd['user'],$config_bd['pass']);
+	$userAdmin->u_logged();
 	/*if(!$userAdmin->u_logged())
 		echo '<script>window.location="index.php?m=login"</script>';*/
 	$tpl->set_filenames(array('default'=>'default'));	
@@ -19,8 +20,8 @@
 		'PATH'			=> $dir_mod,
 		'PATH_IMG'		=> $dir_pimages,
 		'APIKEY'		=> $config['keyapi'],
-		'COD_USER' 		=> $userAdmin->user_info['COD_USER'],
-		'COD_CLI'	 	=> $userAdmin->user_info['COD_CLIENT']
+		'COD_USER' 		=> $userAdmin->user_info['ID_USUARIO'],
+		'COD_CLI'	 	=> $userAdmin->user_info['ID_CLIENTE']
 	));	
 
 	$tpl->pparse('default');

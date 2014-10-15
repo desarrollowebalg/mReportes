@@ -46,8 +46,23 @@ function ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion){
 */
 function controladorAcciones(accion,datos,divResultado){
     switch(accion){
-		case "dibujaGrupos":
-	    	dibujaAcordeonGrupos(accion,datos);
+		case "cargarWidget":
+	    	$("#"+divResultado).show().html(datos);
 		break;
     }
 }
+function muestraWidget(widget){
+	switch(widget){
+		case "fechaHora":
+			parametros="action=cargarWidget&widget="+widget;
+		break;
+		case "gruposUnidades":
+			idCliente=$("#hdnIdCliente").val();
+			idUsuario=$("#hdnIdUsuario").val();
+			parametros="action=cargarWidget&widget="+widget+"&idCliente="+idCliente+"&idUsuario="+idUsuario;
+		break;
+	}
+	//ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion)
+	ajaxReportes("cargarWidget","controladorWidgets",parametros,"cargador2","rep_content","POST");
+}
+
