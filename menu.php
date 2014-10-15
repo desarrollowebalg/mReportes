@@ -12,6 +12,7 @@
 	$userAdmin->u_logged();
 	
 	$id_profile = $userAdmin->user_info['ID_PERFIL'];
+	$id_cliente = $userAdmin->user_info['ID_CLIENTE'];
 	
 	$tpl->set_filenames(array('menu'=>'menu'));		
 	
@@ -23,6 +24,10 @@
 			ORDER BY ADM_SUBMENU.DESCRIPTION  ASC";
 	$query = $db->sqlQuery($sql);
 	$count = $db->sqlEnumRows($query);
+	
+	$sqlReportesMenu = "SELECT NOMBRE_REPORTES_MENU FROM ADM_REPORTES_MENU WHERE ID_CLIENTE='".$id_cliente."'";
+	$resReportesMenu = $db->sqlQuery($sqlReportesMenu);
+
 	if($count>0){
 		while($row = $db->sqlFetchArray($query)){
 			$tpl->assign_block_vars('submenu',array(
@@ -30,10 +35,11 @@
 					'SMN'	=> utf8_encode($row['DESCRIPTION']),
 					'LNK'	=> $row['UBICACION']
 					
-			  	));
-			}
+			));
 		}
-		
+	}
+	
+
 	$tpl->assign_vars(array(	
 		'PATH'			=> $dir_mod,
 		'PATH_IMG'		=> $dir_pimages,
