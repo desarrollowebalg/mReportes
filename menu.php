@@ -11,6 +11,10 @@
 	
 	$userAdmin->u_logged();
 	
+	echo "<pre>";
+	print_r($_POST);
+	echo "</pre>";
+
 	$id_profile = $userAdmin->user_info['ID_PERFIL'];
 	$id_cliente = $userAdmin->user_info['ID_CLIENTE'];
 	
@@ -25,9 +29,6 @@
 	$query = $db->sqlQuery($sql);
 	$count = $db->sqlEnumRows($query);
 	
-	$sqlReportesMenu = "SELECT NOMBRE_REPORTES_MENU FROM ADM_REPORTES_MENU WHERE ID_CLIENTE='".$id_cliente."'";
-	$resReportesMenu = $db->sqlQuery($sqlReportesMenu);
-
 	if($count>0){
 		while($row = $db->sqlFetchArray($query)){
 			$tpl->assign_block_vars('submenu',array(
@@ -39,11 +40,17 @@
 		}
 	}
 	
-
 	$tpl->assign_vars(array(	
 		'PATH'			=> $dir_mod,
 		'PATH_IMG'		=> $dir_pimages,
 	));	
+
+
+	if($_POST["action"]=="mostrarNuevoMenu"){
+		//echo $sqlReportesMenu = "SELECT NOMBRE_REPORTES_MENU FROM ADM_REPORTES_MENU WHERE ID_CLIENTE='".$id_cliente."'";
+		//$resReportesMenu = $db->sqlQuery($sqlReportesMenu);
+
+	}
 
 	$tpl->pparse('menu');
 ?>
