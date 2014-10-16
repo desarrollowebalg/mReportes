@@ -29,21 +29,34 @@ class widgets{
    		return $objBd;
    	}
 
-   	public function regresaGruposCliente($idCliente){
+   	public function regresaGruposCliente($idCliente,$idUsuario){
    		$mensaje="";
       	$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");
-   		$sqlGrupos="SELECT ADM_GRUPOS.ID_GRUPO AS ID_GRUPO,NOMBRE
-		FROM ADM_GRUPOS INNER JOIN ADM_GRUPOS_CLIENTES ON ADM_GRUPOS.ID_GRUPO=ADM_GRUPOS_CLIENTES.ID_GRUPO
-		WHERE ADM_GRUPOS_CLIENTES.ID_CLIENTE='".$idCliente."'";
+   		$sqlGrupos="SELECT ADM_GRUPOS.ID_GRUPO, ADM_GRUPOS.NOMBRE, ADM_USUARIOS_GRUPOS.COD_ENTITY,ADM_UNIDADES.DESCRIPTION
+				FROM (ADM_USUARIOS_GRUPOS INNER JOIN ADM_GRUPOS ON ADM_GRUPOS.ID_GRUPO = ADM_USUARIOS_GRUPOS.ID_GRUPO)INNER JOIN ADM_UNIDADES ON ADM_USUARIOS_GRUPOS.COD_ENTITY=ADM_UNIDADES.COD_ENTITY
+				WHERE ADM_USUARIOS_GRUPOS.ID_USUARIO = '".$idUsuario."' ORDER BY NOMBRE,COD_ENTITY";
 		$resGrupos=$objDb->sqlQuery($sqlGrupos);
 		if($objDb->sqlEnumRows($resGrupos)==0){
 			$mensaje="S/N";
 		}else{
+			$nombreGrupo=""; $banderaGrupo=false;
 			while($rowGrupos=$objDb->sqlFetchArray($resGrupos)){
-				$mensaje=$rowGrupos["ID_GRUPO"]."|".$rowGrupos["NOMBRE"];
+				if($rowGrupos["NOMBRE"] != $nombreGrupo){//se crea el grupo
+					if($banderaGrupo==true){
+						$mensaje.="</optgroup>";
+						$banderaGrupo=false;
+					}
+					$mensaje.="<optgroup label='".$rowGrupos["NOMBRE"]."'><option value='".$rowGrupos["COD_ENTITY"]."'>".$rowGrupos["DESCRIPTION"]."</option>";
+					$banderaGrupo=true;
+					$nombreGrupo=$rowGrupos["NOMBRE"];
+				}else{
+					$mensaje.="<option value='".$rowGrupos["COD_ENTITY"]."'>".$rowGrupos["DESCRIPTION"]."</option>";
+				}
 			}
+			$mensaje.="</optgroup>";
+			//echo htmlentities($mensaje);
+			return $mensaje;
 		}
    	}
-
 }

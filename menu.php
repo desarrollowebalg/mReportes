@@ -30,10 +30,9 @@
 	if($count>0){
 		while($row = $db->sqlFetchArray($query)){
 			$tpl->assign_block_vars('submenu',array(
-					'IDS'		=> $row['ID_SUBMENU'],
-					'SMN'		=> utf8_encode($row['DESCRIPTION']),
-					'LNK'		=> $row['UBICACION'],
-					'IDCLIENTE'	=> $id_cliente
+					'IDS'			=> $row['ID_SUBMENU'],
+					'SMN'			=> utf8_encode($row['DESCRIPTION']),
+					'LNK'			=> $row['UBICACION']
 			));
 		}
 	}
@@ -41,6 +40,8 @@
 	$tpl->assign_vars(array(	
 		'PATH'			=> $dir_mod,
 		'PATH_IMG'		=> $dir_pimages,
+		'IDCLIENTER'	=> $id_cliente,
+		'IDUSUARIOR'	=> $id_usuario
 	));	
 
 	$tpl->pparse('menu');

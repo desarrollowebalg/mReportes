@@ -1,1 +1,24 @@
-<h2>HOLA</h2>
+<script type="text/javascript">
+	$(document).ready(function(){
+		var $widget = $("#cboWidgetGruposUnidades").multiselect({
+ 			noneSelectedText: "Grupos / Unidades",
+ 			header: "Elija una opción:",
+ 			selectedText: "# Unidad(es) seleccionada(s)"
+ 		}),state = true;
+
+		$("#widgetChkTodasGruposUnidades").click(function(){
+			state = !state;
+			$widget.multiselect(state ? 'enable' : 'disable');//si se seleccionan todas las unidades se desactiva el select de unidades
+		});
+
+	});
+</script>
+<div class="contenedorWidgetGruposUnidades ui-corner-all">
+	<div class="tituloWidgetGruposUnidades ui-state-default">Selección de Unidades:</div>
+	<p><input type="checkbox" id="widgetChkTodasGruposUnidades"><label for="widgetChkTodasGruposUnidades">Seleccionar todas</label></p>
+	<div style="margin-left:5px;">
+		<select name="cboWidgetGruposUnidades" id="cboWidgetGruposUnidades" multiple="multiple">
+		{GRUPOSUSUARIO}
+		</select>
+	</div>
+</div>

@@ -10,8 +10,7 @@
     font-weight:bold;
  }
 </style>
-<input type="hidden" name="hdnIdCliente" id="hdnIdCliente" value="{COD_CLI}" />
-<input type="hidden" name="hdnIdUsuario" id="hdnIdUsuario" value="{COD_USER}" />
+
 <div id="rep_menu" class="menu" style="border:1px solid #FF0000;overflow:auto;">
 <h3>Menu Reportes</h3>
 </div><!--adm_menu-->

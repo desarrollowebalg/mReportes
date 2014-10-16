@@ -29,7 +29,7 @@ function ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion){
 		},
 		success: function(data) {
 			$("#"+divCarga).hide();
-			controladorAcciones(accion,data,divResultado);
+			controladorAccionesReportes(accion,data,divResultado);
 		},
 		timeout:90000000,
 		error:function() {
@@ -44,7 +44,7 @@ function ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion){
  *@author	Gerardo Lara
  *@date		6 - Mayo - 2014
 */
-function controladorAcciones(accion,datos,divResultado){
+function controladorAccionesReportes(accion,datos,divResultado){
     switch(accion){
 		case "cargarWidget":
 	    	$("#"+divResultado).show().html(datos);
