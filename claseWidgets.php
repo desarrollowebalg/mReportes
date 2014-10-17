@@ -14,6 +14,9 @@ class widgets{
 	private $bname;
 	private $user;
 	private $pass;
+	private $widgetFecha="";
+	private $widgetGruposUsuarios="";
+	public $strWidget="";
 
 	function __construct() {
   		include "config/database.php";
@@ -29,7 +32,31 @@ class widgets{
    		return $objBd;
    	}
 
-   	public function regresaGruposCliente($idCliente,$idUsuario){
+   	public function obtenerWidget($widgets,$idCliente,$idUsuario){
+   		$strWidget="";
+   		$widgets=explode(",",$widgets);
+		
+		echo "<pre>";
+		print_r($widgets);
+		echo "</pre>";
+		
+		for($i=0;$i<count($widgets);$i++){
+			switch($widgets[$i]){
+	   			case "tWidgetFecha":
+	   				$strWidget.=$this->widgetFechaHora();
+	   			break;
+	   			case "tWidgetGruposUnidades":
+	   				$strWidget.=$this->widgetGruposUsuarios($idCliente,$idUsuario);
+	   			break;
+	   		}
+		}
+   		//echo htmlentities($strWidget);
+   		return $strWidget;
+   	}
+   	/*
+   	*Widget Grupos/Usuarios
+   	*/
+   	private function widgetGruposUsuarios($idCliente,$idUsuario){
    		$mensaje="";
       	$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");
@@ -55,8 +82,56 @@ class widgets{
 				}
 			}
 			$mensaje.="</optgroup>";
-			//echo htmlentities($mensaje);
-			return $mensaje;
 		}
+		$widgetGruposUsuarios="<div class='contenedorWidgetGruposUnidades ui-corner-all'>
+			<div class='tituloWidgetGruposUnidades ui-state-default'>Selección de Unidades:</div>
+			<p><input type='checkbox' id='widgetChkTodasGruposUnidades'><label for='widgetChkTodasGruposUnidades'>Seleccionar todas</label></p>
+			<div style='margin-left:5px;'>
+				<select name='cboWidgetGruposUnidades' id='cboWidgetGruposUnidades' multiple='multiple'>
+				".$mensaje."
+				</select>
+			</div>
+		</div>";
+		return $widgetGruposUsuarios;
    	}
+   	/*
+   	*Widget Fecha/Hora
+   	*/
+   	private function widgetFechaHora(){
+   		$horas="";
+   		$minutos="";
+   		for($i=0;$i<24;$i++){
+			($i<10)? $horas.="<option value='0".$i."'>0".$i."</value>" : $horas.="<option value='".$i."'>".$i."</value>";
+		}
+		for($i=0;$i<60;$i++){
+			($i<10)? $minutos.="<option value='0".$i."'>0".$i."</option>" : $minutos.="<option value='".$i."'>".$i."</option>";
+		}
+		$widgetFecha="<div class='contenedorWidgetFecha ui-corner-all'>
+				<div class='tituloWidgetFecha ui-state-default'>Selección de fechas:</div>
+				<div class='fechaHoraCampo'>
+			    <label for='fechaInicial'>Fecha Inicial:</label><input id='widgetFechaInicial' type='text' readonly='readonly'>&nbsp;&nbsp;
+			    <select name='widgetCboHoraInicial_1' id='widgetCboHoraInicial_1'>
+			      <option value='>--</option>
+			      ".$horas."
+			    </select>
+			    <select name='widgetCboHoraFinalFin_1' id='widgetCboHoraFinal_1'>
+			      <option value='>--</option>
+			      ".$minutos."
+			    </select>
+			  </div>
+				<div class='fechaHoraCampo'>
+			    <label for='fechaFinal'>Fecha Final:&nbsp;&nbsp;</label><input id='widgetFechaFinal' type='text' readonly='readonly'>&nbsp;&nbsp;
+			    <select name='widgetCboHoraInicial_2' id='widgetCboHoraInicial_2'>
+			      <option value='>--</option>
+			      ".$horas."
+			    </select>
+			    <select name='widgetCboHoraFinal_2' id='widgetCboHoraFinal_2'>
+			      <option value='>--</option>
+			      ".$minutos."
+			    </select>
+			  </div>
+			</div>";
+		return $widgetFecha;
+   	}
+
 }

@@ -1,33 +1,50 @@
-<link rel="stylesheet" type="text/css" href="public/libs/datetimepicker/jquery.datetimepicker.css"/ >
-<script src="public/libs/datetimepicker/jquery.js"></script>
-<script src="public/libs/datetimepicker/jquery.datetimepicker.js"></script>
 <script type="text/javascript">
-	$(document).ready(function(){
-		jQuery('#widgetFechaInicial').datetimepicker({
-			lang:'es',
-  			format:'Y-m-d H:m',
-  			onShow:function( ct ){
-   			this.setOptions({
-    			maxDate:jQuery('#widgetFechaFinal').val()?jQuery('#widgetFechaFinal').val():false
-   			})
-  		},
-  		timepicker:true
- 		});
+	$(function(){
+      $( "#widgetFechaInicial" ).datepicker({
+        showOn: "button",
+        buttonImage: "public/images/cal.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
 
- 		jQuery('#widgetFechaFinal').datetimepicker({
- 			lang:'es',
-  			format:'Y-m-d H:m',
-  			onShow:function( ct ){
-   			this.setOptions({
-    			minDate:jQuery('#widgetFechaInicial').val()?jQuery('#widgetFechaInicial').val():false
-   			})
-  		},
-  		timepicker:true
- 		});
+      $( "#widgetFechaFinal" ).datepicker({
+        showOn: "button",
+        buttonImage: "public/images/cal.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date"
+      });
 	});
 </script>
 <div class="contenedorWidgetFecha ui-corner-all">
 	<div class="tituloWidgetFecha ui-state-default">Selección de fechas:</div>
-	<div class="fechaHoraCampo"><label for="fechaInicial">Fecha Inicial:</label><input id="widgetFechaInicial" type="text" readonly="readonly"></div>
-	<div class="fechaHoraCampo"><label for="fechaFinal">Fecha Final:&nbsp;&nbsp;</label><input id="widgetFechaFinal" type="text" readonly="readonly"></div>
+	<div class="fechaHoraCampo">
+    <label for="fechaInicial">Fecha Inicial:</label><input id="widgetFechaInicial" type="text" readonly="readonly">&nbsp;&nbsp;
+    <select name="widgetCboHoraInicial_1" id="widgetCboHoraInicial_1">
+      <option value="">--</option>
+      <!-- BEGIN listadoHoras -->
+      <option>{listadoHoras.HORAS}</option>
+      <!-- END listadoHoras -->
+    </select>
+    <select name="widgetCboHoraFinalFin_1" id="widgetCboHoraFinal_1">
+      <option value="">--</option>
+      <!-- BEGIN listadoMinutos -->
+      <option>{listadoMinutos.MINUTOS}</option>
+      <!-- END listadoMinutos -->
+    </select>
+  </div>
+	<div class="fechaHoraCampo">
+    <label for="fechaFinal">Fecha Final:&nbsp;&nbsp;</label><input id="widgetFechaFinal" type="text" readonly="readonly">&nbsp;&nbsp;
+    <select name="widgetCboHoraInicial_2" id="widgetCboHoraInicial_2">
+      <option value="">--</option>
+      <!-- BEGIN listadoHoras -->
+      <option value="{listadoHoras.HORAS}">{listadoHoras.HORAS}</option>
+      <!-- END listadoHoras -->
+    </select>
+    <select name="widgetCboHoraFinal_2" id="widgetCboHoraFinal_2">
+      <option value="">--</option>
+      <!-- BEGIN listadoMinutos -->
+      <option value="{listadoMinutos.MINUTOS}">{listadoMinutos.MINUTOS}</option>
+      <!-- END listadoMinutos -->
+    </select>
+  </div>
 </div>

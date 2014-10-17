@@ -29,7 +29,44 @@ class reportes{
    		return $objBd;
    	}
 
-   	public function extarerMenuUsuario($idUsuario){
+   	public function extraerWidgetsReporte($idReporte){
+   		$widgets="";
+   		$objDb=$this->iniciarConexionDb();
+      	$objDb->sqlQuery("SET NAMES 'utf8'");
+   		$sqlWidgets="SELECT NOMBRE_PLANTILLA
+		FROM ADM_REPORTES_OPCION_WIDGETS INNER JOIN ADM_REPORTES_WIDGETS ON ADM_REPORTES_OPCION_WIDGETS.ID_WIDGET=ADM_REPORTES_WIDGETS.ID_WIDGET
+		WHERE ADM_REPORTES_OPCION_WIDGETS.ID_REPORTES_OPCION='".$idReporte."'";
+		$resWidgets=$objDb->sqlQuery($sqlWidgets);
+		if($objDb->sqlEnumRows($resWidgets)==0){
+			$widgets="S/N";
+		}else{
+			while($rowWidgets=$objDb->sqlFetchArray($resWidgets)){
+				($widgets=="") ? $widgets.=$rowWidgets["NOMBRE_PLANTILLA"] : $widgets.=",".$rowWidgets["NOMBRE_PLANTILLA"];
+			}
+		}
+		return $widgets;
+   	}
+
+   	public function extraerOpcionesReporte($idReporte){
+   		$mensaje="";
+      	$objDb=$this->iniciarConexionDb();
+      	$objDb->sqlQuery("SET NAMES 'utf8'");
+      	echo "<br>".$sqlObtenerDatosReporte="SELECT NOMBRE_PLANTILLA,QUERY_RESUMEN,CLAUSULA_WHERE_RESUMEN,QUERY_DETALLE,CLAUSULA_WHERE_DETALLE
+		FROM (ADM_REPORTES_OPCION INNER JOIN ADM_REPORTES_OPCION_WIDGETS ON ADM_REPORTES_OPCION.ID_REPORTES_OPCION=ADM_REPORTES_OPCION_WIDGETS.ID_REPORTES_OPCION) INNER JOIN ADM_REPORTES_WIDGETS ON ADM_REPORTES_OPCION_WIDGETS.ID_WIDGET=ADM_REPORTES_WIDGETS.ID_WIDGET
+		WHERE ADM_REPORTES_OPCION.ID_REPORTES_OPCION='".$idReporte."'";
+      	$resObtenerDatosReporte=$objDb->sqlQuery($sqlObtenerDatosReporte);
+      	if($objDb->sqlEnumRows($resObtenerDatosReporte)==0){
+      		$mensaje="S/N";
+      	}else{
+      		while($rowObtenerDatosReporte=$objDb->sqlFetchArray($resObtenerDatosReporte)){
+      			($mensaje=="") ? $mensaje.=$rowObtenerDatosReporte['NOMBRE_PLANTILLA'] : $mensaje.=",".$rowObtenerDatosReporte['NOMBRE_PLANTILLA'];
+      		}
+      		echo "<br>".$mensaje;
+      	}
+      	return $mensaje;
+   	}
+
+   	public function extrerMenuUsuario($idUsuario){
 		$mensaje="";
       	$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");

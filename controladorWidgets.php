@@ -20,6 +20,18 @@ if($_SERVER["HTTP_REFERER"]==""){
 			switch($_POST["widget"]){
 				case "fechaHora":
 					$tpl->set_filenames(array('controlador' => 'tWidgetFecha'));
+					for($i=0;$i<24;$i++){
+						($i<10)? $horas=	"0".$i : $horas= $i;
+						$tpl->assign_block_vars('listadoHoras',array(
+				            'HORAS' =>	$horas
+				        ));
+					}
+					for($i=0;$i<60;$i++){
+						($i<10)? $minutos="0".$i: $minutos= $i;
+						$tpl->assign_block_vars('listadoMinutos',array(
+			            	'MINUTOS' =>	$minutos
+			        	));
+					}
 					$tpl->pparse('controlador');
 				break;
 				case "gruposUnidades":

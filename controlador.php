@@ -11,7 +11,9 @@ if($_SERVER["HTTP_REFERER"]==""){
 	echo "0";
 }else{
 	include "claseReportes.php";
+	include "claseWidgets.php";
 	$objR=new reportes();
+	$objW=new widgets();
 	switch($_POST["action"]){
 		case "mostrarNuevoMenu":
 			$menuR=$objR->extarerMenuUsuario($_POST["idUsuario"]);
@@ -44,6 +46,23 @@ if($_SERVER["HTTP_REFERER"]==""){
 				));
 				$tpl->pparse('controlador');
 			}
+		break;
+		case "mostrarPlantillaReporte":
+			echo "<pre>";
+			print_r($_POST);
+			echo "</pre>";
+			$tpl->set_filenames(array('controlador' => 'tPlantillaReporte'));
+			
+			$widgets=$objR->extraerWidgetsReporte($_POST["idReporte"]);
+
+			$strWidgets=$objW->obtenerWidget($widgets,$_POST["idCliente"],$_POST["idUsuario"]);
+			
+			$tpl->assign_vars(array(
+				'WIDGETS'	=> $strWidgets
+			));
+			
+
+			$tpl->pparse('controlador');
 		break;
 	}
 }

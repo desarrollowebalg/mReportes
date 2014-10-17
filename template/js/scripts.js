@@ -14,11 +14,7 @@ function rep_abrir_modulo(m){
         }
 	});
 }
-/*
- *@name 	Funcion para hacer las peticiones ajax
- *@author	Gerardo Lara
- *@date		26 - Agosto - 2014
-*/
+/**@name 	Funcion para hacer las peticiones ajax*/
 function ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion){
 	$.ajax({
 		url: "index.php?m=mReportes&c="+c,
@@ -39,17 +35,24 @@ function ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion){
 		}
 	});
 }
-/*
- *@name 	Funcion controlar las acciones dependiendo de la accion pedida
- *@author	Gerardo Lara
- *@date		6 - Mayo - 2014
-*/
+/**@name 	Funcion controlar las acciones dependiendo de la accion pedida*/
 function controladorAccionesReportes(accion,datos,divResultado){
     switch(accion){
 		case "cargarWidget":
 	    	$("#"+divResultado).show().html(datos);
 		break;
+		case "mostrarPlantillaReporte":
+			$("#"+divResultado).show().html(datos);
+		break;
     }
+}
+/**@name 	Funcion controlar las peticiones de los reportes*/
+function cargaElementosReporte(idReporte){
+	idCliente=$("#hdnIdCliente").val();
+	idUsuario=$("#hdnIdUsuario").val();
+	parametros="action=mostrarPlantillaReporte&idReporte="+idReporte+"&idCliente="+idCliente+"&idUsuario="+idUsuario;
+	//se manda a armar la estructura para el reporte
+	ajaxReportes("mostrarPlantillaReporte","controlador",parametros,"cargador2","rep_content","POST");
 }
 function muestraWidget(widget){
 	switch(widget){
