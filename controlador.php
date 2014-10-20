@@ -53,12 +53,25 @@ if($_SERVER["HTTP_REFERER"]==""){
 			echo "</pre>";
 			$tpl->set_filenames(array('controlador' => 'tPlantillaReporte'));
 			
-			$widgets=$objR->extraerWidgetsReporte($_POST["idReporte"]);
-
+			$componentes=$objR->extraerWidgetsReporte($_POST["idReporte"]);//se extraen los componentes del reporte
+			$componentes=explode("|||",$componentes);
+			$widgets="";
+			$elementosAnalizar="";
+			for($i=0;$i<$tot=count($componentes);$i++){//se recorren 
+				$elementosComponentes=explode("||",$componentes[$i]);
+				$parametrosWidget=explode("|",$elementosComponentes[1]);
+				($widgets=="") ? $widgets.=$elementosComponentes[0] : $widgets.=",".$elementosComponentes[0];
+				for($j=0;$j<count($parametrosWidget);$j++){
+					($elementosAnalizar=="") ? $elementosAnalizar=$parametrosWidget[$j] : $elementosAnalizar.=",".$parametrosWidget[$j];
+				}
+			}
+			
 			$strWidgets=$objW->obtenerWidget($widgets,$_POST["idCliente"],$_POST["idUsuario"]);
 			
 			$tpl->assign_vars(array(
-				'WIDGETS'	=> $strWidgets
+				'WIDGETS'		=> $strWidgets,
+				'WIDGETSTIPO'	=> $widgets,
+				'ELEM_ANALIZAR'	=> $elementosAnalizar
 			));
 			
 

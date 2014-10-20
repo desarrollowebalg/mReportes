@@ -9,13 +9,15 @@
 	        showOn: 'button',
 	        buttonImage: 'public/images/cal.gif',
 	        buttonImageOnly: true,
-	        buttonText: 'Select date'
+	        buttonText: 'Select date',
+	        dateFormat:"yy-mm-dd"
       	});
       	$( '#widgetFechaFinal' ).datepicker({
 	        showOn: 'button',
 	        buttonImage: 'public/images/cal.gif',
 	        buttonImageOnly: true,
-	        buttonText: 'Select date'
+	        buttonText: 'Select date',
+	        dateFormat:"yy-mm-dd"
       	});
 
       	var $widget = $("#cboWidgetGruposUnidades").multiselect({
@@ -28,7 +30,27 @@
 			state = !state;
 			$widget.multiselect(state ? 'enable' : 'disable');//si se seleccionan todas las unidades se desactiva el select de unidades
 		});
-	});	
+
+		$("#generarReporte").click(function(){
+			recuperarValores();
+		});
+	});
+	var parametros="";
+	function recuperarValores(){
+		widgetsAnalizar=$("#hdnElementosAnalizar").val();//se recuperan los tipos de widgets
+		widgetsAnalizar=widgetsAnalizar.split(",");
+		
+		for(i=0;i<widgetsAnalizar.length;i++){//proceso para la recuperacion de los valores
+			valorCampo=$("#"+widgetsAnalizar[i]).val();
+			if(valorCampo != "" || valorCampo != undefined){
+				(parametros=="") ? parametros=valorCampo : parametros+="||"+valorCampo;
+			}else{
+				alert("Verifique que no exista ningun campo vacio");
+				break;
+			}
+		}
+		alert("parametros= "+parametros);
+	}	
 </script>
 <div id="idContenedorReportesWidgets" style="border:1px solid #FF0000;width:99.2%;height:98.5%;position:relative;margin:3px;">
 	<div id="idContenedorAreaComponentesWidgets" style="margin:5px;border:1px solid #FF0000;width:98.7%;height:30%;position:relative;">
@@ -36,7 +58,9 @@
 			{WIDGETS}
 		</div>
 		<div style="margin:3px;border:1px solid #FF0000;width:99%;height:20%;">
-			<input type="button" value="Generar Reporte" class="ui-state-default ui-corner-all" style="height:25px;padding:3px;margin-top:4px;float:right;margin-right:5px;" />
+			<input type="hidden" name="hdnWidgetsTipo" id="hdnWidgetsTipo" value="{WIDGETSTIPO}" />
+			<input type="hidden" name="hdnElementosAnalizar" id="hdnElementosAnalizar" value="{ELEM_ANALIZAR}" />
+			<input type="button" id="generarReporte" value="Generar Reporte" class="ui-state-default ui-corner-all" style="height:25px;padding:3px;margin-top:4px;float:right;margin-right:5px;" />
 		</div>
 	</div>
 	<div id="idContenedorTabsDetalleReporte" style="margin:5px;border:1px solid #FF0000;width:98.7%;height:66.5%;">

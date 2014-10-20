@@ -33,7 +33,7 @@ class reportes{
    		$widgets="";
    		$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");
-   		$sqlWidgets="SELECT NOMBRE_PLANTILLA
+   		$sqlWidgets="SELECT NOMBRE_PLANTILLA,CAMPOSVALORES
 		FROM ADM_REPORTES_OPCION_WIDGETS INNER JOIN ADM_REPORTES_WIDGETS ON ADM_REPORTES_OPCION_WIDGETS.ID_WIDGET=ADM_REPORTES_WIDGETS.ID_WIDGET
 		WHERE ADM_REPORTES_OPCION_WIDGETS.ID_REPORTES_OPCION='".$idReporte."'";
 		$resWidgets=$objDb->sqlQuery($sqlWidgets);
@@ -41,7 +41,7 @@ class reportes{
 			$widgets="S/N";
 		}else{
 			while($rowWidgets=$objDb->sqlFetchArray($resWidgets)){
-				($widgets=="") ? $widgets.=$rowWidgets["NOMBRE_PLANTILLA"] : $widgets.=",".$rowWidgets["NOMBRE_PLANTILLA"];
+				($widgets=="") ? $widgets.=$rowWidgets["NOMBRE_PLANTILLA"]."||".$rowWidgets["CAMPOSVALORES"] : $widgets.="|||".$rowWidgets["NOMBRE_PLANTILLA"]."||".$rowWidgets["CAMPOSVALORES"];
 			}
 		}
 		return $widgets;

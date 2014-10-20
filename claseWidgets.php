@@ -111,22 +111,22 @@ class widgets{
 				<div class='fechaHoraCampo'>
 			    <label for='fechaInicial'>Fecha Inicial:</label><input id='widgetFechaInicial' type='text' readonly='readonly'>&nbsp;&nbsp;
 			    <select name='widgetCboHoraInicial_1' id='widgetCboHoraInicial_1'>
-			      <option value='>--</option>
+			      <option value='00' selected='selected'>00</option>
 			      ".$horas."
 			    </select>
 			    <select name='widgetCboHoraFinalFin_1' id='widgetCboHoraFinal_1'>
-			      <option value='>--</option>
+			      <option value='00' selected='selected'>00</option>
 			      ".$minutos."
 			    </select>
 			  </div>
 				<div class='fechaHoraCampo'>
 			    <label for='fechaFinal'>Fecha Final:&nbsp;&nbsp;</label><input id='widgetFechaFinal' type='text' readonly='readonly'>&nbsp;&nbsp;
 			    <select name='widgetCboHoraInicial_2' id='widgetCboHoraInicial_2'>
-			      <option value='>--</option>
+			      <option value='23' selected='selected'>23</option>
 			      ".$horas."
 			    </select>
 			    <select name='widgetCboHoraFinal_2' id='widgetCboHoraFinal_2'>
-			      <option value='>--</option>
+			      <option value='59' selected='selected'>59</option>
 			      ".$minutos."
 			    </select>
 			  </div>
