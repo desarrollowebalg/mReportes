@@ -51,10 +51,9 @@ if($_SERVER["HTTP_REFERER"]==""){
 			echo "<pre>";
 			print_r($_POST);
 			echo "</pre>";
-			$tpl->set_filenames(array('controlador' => 'tPlantillaReporte'));
-			
+			$tpl->set_filenames(array('controlador' => 'tPlantillaReporte'));//instancia de la plantilla
 			$componentes=$objR->extraerWidgetsReporte($_POST["idReporte"]);//se extraen los componentes del reporte
-			$componentes=explode("|||",$componentes);
+			$componentes=explode("|||",$componentes);//se descomponen para invocarse y traer el HTML de cada componente
 			$widgets="";
 			$elementosAnalizar="";
 			for($i=0;$i<$tot=count($componentes);$i++){//se recorren 
@@ -65,17 +64,25 @@ if($_SERVER["HTTP_REFERER"]==""){
 					($elementosAnalizar=="") ? $elementosAnalizar=$parametrosWidget[$j] : $elementosAnalizar.=",".$parametrosWidget[$j];
 				}
 			}
-			
+			//se obtienen los widgets necesarios para el reporte
 			$strWidgets=$objW->obtenerWidget($widgets,$_POST["idCliente"],$_POST["idUsuario"]);
-			
+			$idReporteOpcion=$_POST["idReporte"];
+			//se asignan las diferentes variables
 			$tpl->assign_vars(array(
-				'WIDGETS'		=> $strWidgets,
-				'WIDGETSTIPO'	=> $widgets,
-				'ELEM_ANALIZAR'	=> $elementosAnalizar
+				'WIDGETS'			=> $strWidgets,
+				'WIDGETSTIPO'		=> $widgets,
+				'ELEM_ANALIZAR'		=> $elementosAnalizar,
+				'IDREPORTEOPCION' 	=> $idReporteOpcion
 			));
-			
-
 			$tpl->pparse('controlador');
+		break;
+		case "mostrarReporte":
+			echo "<pre>";
+			print_r($_POST);
+			echo "</pre>";
+
+			$objR->construyeSQLReporte($_POST["parametros"]);
+
 		break;
 	}
 }

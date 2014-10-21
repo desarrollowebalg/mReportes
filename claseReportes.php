@@ -29,6 +29,18 @@ class reportes{
    		return $objBd;
    	}
 
+   	public function construyeSQLReporte($parametros){
+		//se separan los parametros de la opcion del reporte
+		$parametros=explode("|||",$parametros);
+
+		echo "<pre>";
+		print_r($parametros);
+		echo "</pre>";
+		//se extrae el tipo de widgets que contiene el reporte
+		$sqlTWidgets="SELECT ";
+
+   	}
+
    	public function extraerWidgetsReporte($idReporte){
    		$widgets="";
    		$objDb=$this->iniciarConexionDb();

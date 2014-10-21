@@ -42,14 +42,23 @@
 		
 		for(i=0;i<widgetsAnalizar.length;i++){//proceso para la recuperacion de los valores
 			valorCampo=$("#"+widgetsAnalizar[i]).val();
-			if(valorCampo != "" || valorCampo != undefined){
-				(parametros=="") ? parametros=valorCampo : parametros+="||"+valorCampo;
+			if(valorCampo != "" && valorCampo != undefined && valorCampo != null){
+				//verificar las varibales de fecha y tiempo inicial y juntarlas en un solo campo para un mejor manejo al momento de extraer el reporte
+				/*if(){
+
+				}*/
+				if(parametros==""){
+					parametros=valorCampo
+				}else{
+					parametros+="||"+valorCampo;
+				}
 			}else{
 				alert("Verifique que no exista ningun campo vacio");
 				break;
 			}
 		}
 		alert("parametros= "+parametros);
+		extraerReporte(parametros);
 	}	
 </script>
 <div id="idContenedorReportesWidgets" style="border:1px solid #FF0000;width:99.2%;height:98.5%;position:relative;margin:3px;">
@@ -60,6 +69,7 @@
 		<div style="margin:3px;border:1px solid #FF0000;width:99%;height:20%;">
 			<input type="hidden" name="hdnWidgetsTipo" id="hdnWidgetsTipo" value="{WIDGETSTIPO}" />
 			<input type="hidden" name="hdnElementosAnalizar" id="hdnElementosAnalizar" value="{ELEM_ANALIZAR}" />
+			<input type="hidden" name="hdnIdReportesOpcion" id="hdnIdReportesOpcion" value="{IDREPORTEOPCION}" />
 			<input type="button" id="generarReporte" value="Generar Reporte" class="ui-state-default ui-corner-all" style="height:25px;padding:3px;margin-top:4px;float:right;margin-right:5px;" />
 		</div>
 	</div>

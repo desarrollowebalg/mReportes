@@ -44,6 +44,9 @@ function controladorAccionesReportes(accion,datos,divResultado){
 		case "mostrarPlantillaReporte":
 			$("#"+divResultado).show().html(datos);
 		break;
+		case "mostrarReporte":
+			$("#"+divResultado).show().html(datos);
+		break;
     }
 }
 /**@name 	Funcion controlar las peticiones de los reportes*/
@@ -68,4 +71,16 @@ function muestraWidget(widget){
 	//ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion)
 	ajaxReportes("cargarWidget","controladorWidgets",parametros,"cargador2","rep_content","POST");
 }
-
+function extraerReporte(parametros){
+	idReporteOpcion=$("#hdnIdReportesOpcion").val();//se extrae el idReporteOpcion
+	
+	alert("Parametros = "+parametros+"\n\n"+"id reporteopcion = "+idReporteOpcion);
+	
+	var parametrosR="action=mostrarReporte&parametros="+parametros+"|||"+idReporteOpcion;
+	idCliente=$("#hdnIdCliente").val();
+	idUsuario=$("#hdnIdUsuario").val();
+	
+	alert(parametrosR)
+	
+	ajaxReportes("mostrarReporte","controlador",parametrosR,"cargador2","tabReporteResumen","POST");
+}
