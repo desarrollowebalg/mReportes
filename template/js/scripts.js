@@ -73,14 +73,11 @@ function muestraWidget(widget){
 }
 function extraerReporte(parametros){
 	idReporteOpcion=$("#hdnIdReportesOpcion").val();//se extrae el idReporteOpcion
-	
-	alert("Parametros = "+parametros+"\n\n"+"id reporteopcion = "+idReporteOpcion);
-	
-	var parametrosR="action=mostrarReporte&parametros="+parametros+"|||"+idReporteOpcion;
+	//alert("Parametros = "+parametros+"\n\n"+"id reporteopcion = "+idReporteOpcion);
 	idCliente=$("#hdnIdCliente").val();
 	idUsuario=$("#hdnIdUsuario").val();
-	
-	alert(parametrosR)
-	
+	elementosAnalizar=$("#hdnElementosAnalizar").val();
+	var parametrosR="action=mostrarReporte&parametros="+parametros+"|||"+idReporteOpcion+"&idCliente="+idCliente+"&idUsuario="+idUsuario+"&elementosAnalizar="+elementosAnalizar;
+	//alert(parametrosR)
 	ajaxReportes("mostrarReporte","controlador",parametrosR,"cargador2","tabReporteResumen","POST");
 }

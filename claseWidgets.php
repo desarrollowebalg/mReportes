@@ -35,11 +35,11 @@ class widgets{
    	public function obtenerWidget($widgets,$idCliente,$idUsuario){
    		$strWidget="";
    		$widgets=explode(",",$widgets);
-		
+		/*
 		echo "<pre>";
 		print_r($widgets);
 		echo "</pre>";
-		
+		*/
 		for($i=0;$i<count($widgets);$i++){
 			switch($widgets[$i]){
 	   			case "tWidgetFecha":

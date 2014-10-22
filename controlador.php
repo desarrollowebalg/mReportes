@@ -48,9 +48,9 @@ if($_SERVER["HTTP_REFERER"]==""){
 			}
 		break;
 		case "mostrarPlantillaReporte":
-			echo "<pre>";
+			/*echo "<pre>";
 			print_r($_POST);
-			echo "</pre>";
+			echo "</pre>";*/
 			$tpl->set_filenames(array('controlador' => 'tPlantillaReporte'));//instancia de la plantilla
 			$componentes=$objR->extraerWidgetsReporte($_POST["idReporte"]);//se extraen los componentes del reporte
 			$componentes=explode("|||",$componentes);//se descomponen para invocarse y traer el HTML de cada componente
@@ -77,11 +77,11 @@ if($_SERVER["HTTP_REFERER"]==""){
 			$tpl->pparse('controlador');
 		break;
 		case "mostrarReporte":
-			echo "<pre>";
+			/*echo "<pre>";
 			print_r($_POST);
-			echo "</pre>";
+			echo "</pre>";*/
 
-			$objR->construyeSQLReporte($_POST["parametros"]);
+			$objR->construyeSQLReporte($_POST["parametros"],$_POST["elementosAnalizar"]);
 
 		break;
 	}

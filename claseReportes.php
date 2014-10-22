@@ -9,11 +9,14 @@
 
 class reportes{
 	private $objDb;
+	private $objBdG;
 	private $host;
 	private $port;
 	private $bname;
 	private $user;
 	private $pass;
+	private $elementos 	=	array();
+	private $valores	=	array();
 
 	function __construct() {
   		include "config/database.php";
@@ -29,16 +32,163 @@ class reportes{
    		return $objBd;
    	}
 
-   	public function construyeSQLReporte($parametros){
+   	private function iniciarConexionDbGrid(){
+   		$objBdG=mysql_connect($this->host,$this->user,$this->pass);
+   		if($objBdG){
+   			@mysql_select_db($this->bname)or die("Error al conectar con la base de datos");
+   		}
+   		return $objBdG;
+   	}
+
+
+   	private function evaluaParametro($strParametro){
+		include "configuracionVariables.php";
+		$valor="";
+		//echo "<br>".$strParametro;
+		//$strParametro=explode(" ",$strParametro);
+		$parametrosCampo=explode(" ",$strParametro);
+		/*echo "<pre>";
+		print_r($parametrosCampo);
+		echo "</pre>";*/
+		
+		for($i=0;$i<count($parametrosCampo);$i++){
+			
+
+			if(array_key_exists($parametrosCampo[$i], $configuracionParametros)){
+				/*echo "<br>Posicion valor: ".$posicionValor=$configuracionParametros[$parametrosCampo[$i]];
+				echo "<br>Indice valor: ".$indiceValor=array_search($posicionValor, $this->elementos);
+				echo "<br>valor: ".$valor.=$this->valores[$indiceValor];*/
+				$posicionValor=$configuracionParametros[$parametrosCampo[$i]];
+				$indiceValor=array_search($posicionValor, $this->elementos);
+				$valor.=$this->valores[$indiceValor];
+				if($parametrosCampo[$i]=="@FECHAINICIAL" || $parametrosCampo[$i]=="@FECHAFINAL"){
+					$valor.=" ";
+				}
+				if($parametrosCampo[$i]=="@HORAINICIAL" || $parametrosCampo[$i]=="@HORAFINAL"){
+					$valor.=":";
+				}
+			}
+
+		}
+		
+		/*echo "<pre>";
+		print_r($configuracionParametros);
+		echo "</pre>";*/
+		return $valor;
+   	}
+
+   	public function construyeSQLReporte($parametros,$elementosAnalizar){
+   		
+   		$objDb=$this->iniciarConexionDb();
+      	$objDb->sqlQuery("SET NAMES 'utf8'");
 		//se separan los parametros de la opcion del reporte
 		$parametros=explode("|||",$parametros);
 
-		echo "<pre>";
+		/*echo "<pre>";
 		print_r($parametros);
-		echo "</pre>";
-		//se extrae el tipo de widgets que contiene el reporte
-		$sqlTWidgets="SELECT ";
+		echo "</pre>";*/
+		//se trabaja para el orden de los paramatros en el array
+		$elementos=explode(",",$elementosAnalizar);
+		$valores=explode("||",$parametros[0]);
+		$this->elementos=$elementos;
+		/*echo "<pre>";
+		print_r($elementos);
+		echo "</pre>";*/
+		$this->valores=$valores;
+		/*echo "<pre>";
+		print_r($valores);
+		echo "</pre>";*/
+		
+		
 
+		$select="";
+		$where=" WHERE ";
+		$operadorTemporal="";
+		//se extrae el cuerpo SQL
+		$sqlCuerpo="SELECT ID_SQL,SQLTEXTO,TIPO
+		FROM ADM_REPORTES_OPCION_SQL INNER JOIN ADM_REPORTES_SQL ON ADM_REPORTES_OPCION_SQL.ID_REPORTES_SQL=ADM_REPORTES_SQL.ID_SQL
+		WHERE ADM_REPORTES_OPCION_SQL.ID_REPORTES_OPCION='".$parametros[1]."'";
+		
+		$resCuerpo=$objDb->sqlQuery($sqlCuerpo);
+		if($objDb->sqlEnumRows($resCuerpo)!=0){
+			$rowCuerpo=$objDb->sqlFetchArray($resCuerpo);
+			$select=$rowCuerpo["SQLTEXTO"];
+			//se procede a extraer el where
+			$sqlWhere="SELECT * FROM ADM_REPORTES_SQL_WHERE WHERE ID_SQL='".$rowCuerpo["ID_SQL"]."'";
+			$resWhere=$objDb->sqlQuery($sqlWhere);
+			//$i=0;
+
+			if($objDb->sqlEnumRows($resWhere) != 0){
+				while($rowWhere=$objDb->sqlFetchArray($resWhere)){
+					if($operadorTemporal==""){	
+						if($rowWhere["OPERADOR"]=="IN"){
+
+							//$where.=" (".$rowWhere["PARAMETRO"].")";
+							$where.=" ".$rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." (".$this->evaluaParametro($rowWhere["PARAMETRO"]).")";
+						}else{
+							$valor="";
+							//$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$rowWhere["PARAMETRO"]."'";
+							$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";	
+						}
+						$operadorTemporal=$rowWhere["OPERADOR"];
+					}else{
+						if($operadorTemporal=="BETWEEN"){
+							//$where.=" '".$rowWhere["PARAMETRO"]."'";
+							$where.=" '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";
+						}
+						$operadorTemporal="";
+					}
+
+					if($rowWhere["CONECTOR"]!=""){
+						$where.=" ".$rowWhere["CONECTOR"]." ";
+					}
+					//echo "<br />contador ".$i." ".$where;
+					//$i+=1;
+				}
+			}else{
+				echo "Error al construir la Consulta SQL";	
+			}
+		}else{
+			echo "No se puede procesar el reporte por falta de extraccion SQL.";
+		}
+		echo "<br />".$sqlCommand=$select.$where;
+
+		
+		$conn=$this->iniciarConexionDbGrid();//conexion hacia la base de datos
+		mysql_query("SET NAMES 'utf8'",$conn);// set your db encoding -- for ascent chars (if required)
+		include "public/libs/phpgridv1.5.2/lib/inc/jqgrid_dist.php";
+
+		$g = new jqgrid();//se instancia el objeto
+		// parametros de configuracion
+		//$grid["caption"] = "Alertas";
+		$grid["multiselect"] 	= true;
+		$grid["autowidth"] 		= true; // expand grid to screen width
+		//$grid["resizable"] 		= true;
+		//$grid["altRows"] 		= true;
+		//$grid["altclass"] 		="alternarRegistros";
+		$grid["scroll"] 		= false;
+		$grid["sortorder"]		="desc";
+		//$grid["rowNum"] 		= 10; // by default 20 
+		$g->set_options($grid);
+		$g->set_actions(array(  
+                        "add"=>false,
+                        "edit"=>false,
+                        "delete"=>false,
+                        "view"=>false,
+                        "rowactions"=>false,
+                        "export"=>false,
+                        "autofilter" => true,
+                        "search" => "advance",
+                        "inlineadd" => false,
+                        "showhidecolumns" => true
+                    )
+                );
+		$g->table = "HIST00000";// set database table for CRUD operations
+		//$g->set_columns($cols);
+		$g->select_command = trim($select.$where);// comando SQL
+		//$g->select_command = "SELECT * FROM HIST00001 WHERE GPS_DATETIME BETWEEN '2014-01-01 00:00' AND '2014-10-22 23:59' AND COD_ENTITY IN (26,27,112,127) ";// comando SQL
+		$out = $g->render("reportes");// render grid
+		echo $out;
    	}
 
    	public function extraerWidgetsReporte($idReporte){
