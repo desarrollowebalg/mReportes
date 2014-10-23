@@ -76,12 +76,15 @@ if($_SERVER["HTTP_REFERER"]==""){
 			));
 			$tpl->pparse('controlador');
 		break;
+	}
+
+	switch($_GET["action"]){
 		case "mostrarReporte":
 			/*echo "<pre>";
 			print_r($_POST);
 			echo "</pre>";*/
 
-			$objR->construyeSQLReporte($_POST["parametros"],$_POST["elementosAnalizar"]);
+			$objR->construyeSQLReporte($_GET["parametros"],$_GET["elementosAnalizar"]);
 
 		break;
 	}

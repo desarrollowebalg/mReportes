@@ -28,10 +28,10 @@ function ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion){
 			controladorAccionesReportes(accion,data,divResultado);
 		},
 		timeout:90000000,
-		error:function() {
+		error:function(data) {
 		    $("#"+divCarga).hide();
 		    $("#error").show();
-		    $("#error_mensaje").html('Ocurrio un error al procesar la solicitud.');
+		    $("#error_mensaje").html(data);
 		}
 	});
 }
@@ -79,5 +79,5 @@ function extraerReporte(parametros){
 	elementosAnalizar=$("#hdnElementosAnalizar").val();
 	var parametrosR="action=mostrarReporte&parametros="+parametros+"|||"+idReporteOpcion+"&idCliente="+idCliente+"&idUsuario="+idUsuario+"&elementosAnalizar="+elementosAnalizar;
 	//alert(parametrosR)
-	ajaxReportes("mostrarReporte","controlador",parametrosR,"cargador2","tabReporteResumen","POST");
+	ajaxReportes("mostrarReporte","controlador",parametrosR,"cargador2","tabReporteResumen","GET");
 }

@@ -151,9 +151,10 @@ class reportes{
 		}else{
 			echo "No se puede procesar el reporte por falta de extraccion SQL.";
 		}
-		echo "<br />".$sqlCommand=$select.$where;
+		//echo "<br />".
+		$sqlCommand=trim($select.$where);
 
-		
+
 		$conn=$this->iniciarConexionDbGrid();//conexion hacia la base de datos
 		mysql_query("SET NAMES 'utf8'",$conn);// set your db encoding -- for ascent chars (if required)
 		include "public/libs/phpgridv1.5.2/lib/inc/jqgrid_dist.php";
@@ -161,7 +162,7 @@ class reportes{
 		$g = new jqgrid();//se instancia el objeto
 		// parametros de configuracion
 		//$grid["caption"] = "Alertas";
-		$grid["multiselect"] 	= true;
+		$grid["multiselect"] 	= false;
 		$grid["autowidth"] 		= true; // expand grid to screen width
 		//$grid["resizable"] 		= true;
 		//$grid["altRows"] 		= true;
@@ -183,11 +184,13 @@ class reportes{
                         "showhidecolumns" => true
                     )
                 );
+		//echo $sqlCommand;
+		$g->select_command = $sqlCommand;// comando SQL
 		$g->table = "HIST00000";// set database table for CRUD operations
 		//$g->set_columns($cols);
-		$g->select_command = trim($select.$where);// comando SQL
+		
 		//$g->select_command = "SELECT * FROM HIST00001 WHERE GPS_DATETIME BETWEEN '2014-01-01 00:00' AND '2014-10-22 23:59' AND COD_ENTITY IN (26,27,112,127) ";// comando SQL
-		$out = $g->render("reportes");// render grid
+		$out = $g->render("reportesX");// render grid
 		echo $out;
    	}
 
