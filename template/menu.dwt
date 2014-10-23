@@ -21,4 +21,5 @@ $(function() {
 <div id="menuWidgets" style="margin:5px 5px 5px 5px;border:1px solid #FF0000;height:auto;">
 	<div style="padding:5px;"><a href="#" onclick="muestraWidget('fechaHora')">Fecha/Hora</a></div>
 	<div style="padding:5px;"><a href="#" onclick="muestraWidget('gruposUnidades')">Grupos/Unidades</a></div>
+	<div style="padding:5px;"><a href="#" onclick="muestraWidget('usuarios')">Usuarios</a></div>
 </div>

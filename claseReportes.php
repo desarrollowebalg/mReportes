@@ -112,41 +112,44 @@ class reportes{
 		$resCuerpo=$objDb->sqlQuery($sqlCuerpo);
 		if($objDb->sqlEnumRows($resCuerpo)!=0){
 			$rowCuerpo=$objDb->sqlFetchArray($resCuerpo);
-			$select=$rowCuerpo["SQLTEXTO"];
-			//se procede a extraer el where
-			$sqlWhere="SELECT * FROM ADM_REPORTES_SQL_WHERE WHERE ID_SQL='".$rowCuerpo["ID_SQL"]."'";
-			$resWhere=$objDb->sqlQuery($sqlWhere);
-			//$i=0;
+			if($rowCuerpo["TIPO"]=="Q"){
+				$select=$rowCuerpo["SQLTEXTO"];
+				//se procede a extraer el where
+				$sqlWhere="SELECT * FROM ADM_REPORTES_SQL_WHERE WHERE ID_SQL='".$rowCuerpo["ID_SQL"]."'";
+				$resWhere=$objDb->sqlQuery($sqlWhere);
+				//$i=0;
+				if($objDb->sqlEnumRows($resWhere) != 0){
+					while($rowWhere=$objDb->sqlFetchArray($resWhere)){
+						if($operadorTemporal==""){	
+							if($rowWhere["OPERADOR"]=="IN"){
 
-			if($objDb->sqlEnumRows($resWhere) != 0){
-				while($rowWhere=$objDb->sqlFetchArray($resWhere)){
-					if($operadorTemporal==""){	
-						if($rowWhere["OPERADOR"]=="IN"){
-
-							//$where.=" (".$rowWhere["PARAMETRO"].")";
-							$where.=" ".$rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." (".$this->evaluaParametro($rowWhere["PARAMETRO"]).")";
+								//$where.=" (".$rowWhere["PARAMETRO"].")";
+								$where.=" ".$rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." (".$this->evaluaParametro($rowWhere["PARAMETRO"]).")";
+							}else{
+								$valor="";
+								//$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$rowWhere["PARAMETRO"]."'";
+								$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";	
+							}
+							$operadorTemporal=$rowWhere["OPERADOR"];
 						}else{
-							$valor="";
-							//$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$rowWhere["PARAMETRO"]."'";
-							$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";	
+							if($operadorTemporal=="BETWEEN"){
+								//$where.=" '".$rowWhere["PARAMETRO"]."'";
+								$where.=" '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";
+							}
+							$operadorTemporal="";
 						}
-						$operadorTemporal=$rowWhere["OPERADOR"];
-					}else{
-						if($operadorTemporal=="BETWEEN"){
-							//$where.=" '".$rowWhere["PARAMETRO"]."'";
-							$where.=" '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";
-						}
-						$operadorTemporal="";
-					}
 
-					if($rowWhere["CONECTOR"]!=""){
-						$where.=" ".$rowWhere["CONECTOR"]." ";
+						if($rowWhere["CONECTOR"]!=""){
+							$where.=" ".$rowWhere["CONECTOR"]." ";
+						}
+						//echo "<br />contador ".$i." ".$where;
+						//$i+=1;
 					}
-					//echo "<br />contador ".$i." ".$where;
-					//$i+=1;
+				}else{
+					echo "Error al construir la Consulta SQL";	
 				}
-			}else{
-				echo "Error al construir la Consulta SQL";	
+			}elseif($rowCuerpo["TIPO"]=="P"){
+
 			}
 		}else{
 			echo "No se puede procesar el reporte por falta de extraccion SQL.";

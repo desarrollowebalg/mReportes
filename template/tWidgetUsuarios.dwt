@@ -1,0 +1,31 @@
+<script type="text/javascript">
+	$(function(){
+		var $widgetUsuarios = $("#cboWidgetUsuarios").multiselect({
+ 			noneSelectedText: "Usuarios",
+ 			header: "Elija un usuario:",
+ 			selectedText: "# Usuario(s) seleccionado(s)",
+ 			click: function(e){
+ 				if( $(this).multiselect("widget").find("input:checked").length >1 ){
+ 					return false;
+ 				}
+ 			}
+ 		}),state = true;
+
+		$("#widgetChkTodasGruposUnidades").click(function(){
+			state = !state;
+			$widgetUsuarios.multiselect(state ? 'enable' : 'disable');//si se seleccionan todas las unidades se desactiva el select de unidades
+		});
+
+	});
+</script>
+<div class="contenedorWidgetUsuarios ui-corner-all">
+	<div class="tituloWidgetUsuarios ui-state-default">Selección de Usuarios:</div>
+	<!--<p><input type="checkbox" id="widgetChkTodasGruposUnidades"><label for="widgetChkTodasGruposUnidades">Seleccionar todas</label></p>-->
+	<div style="margin-left:5px;margin-top:10px;">
+		<select name="cboWidgetUsuarios" id="cboWidgetUsuarios" multiple="multiple">
+		<!-- BEGIN listadoUsuarios -->
+		{listadoUsuarios.USUARIO}
+		<!-- END listadoUsuarios -->
+		</select>
+	</div>
+</div>

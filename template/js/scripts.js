@@ -67,6 +67,11 @@ function muestraWidget(widget){
 			idUsuario=$("#hdnIdUsuario").val();
 			parametros="action=cargarWidget&widget="+widget+"&idCliente="+idCliente+"&idUsuario="+idUsuario;
 		break;
+		case "usuarios":
+			idCliente=$("#hdnIdCliente").val();
+			idUsuario=$("#hdnIdUsuario").val();
+			parametros="action=cargarWidget&widget="+widget+"&idCliente="+idCliente+"&idUsuario="+idUsuario;
+		break;
 	}
 	//ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion)
 	ajaxReportes("cargarWidget","controladorWidgets",parametros,"cargador2","rep_content","POST");

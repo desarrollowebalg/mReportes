@@ -48,11 +48,52 @@ class widgets{
 	   			case "tWidgetGruposUnidades":
 	   				$strWidget.=$this->widgetGruposUsuarios($idCliente,$idUsuario);
 	   			break;
+	   			case "tWidgetUsuarios":
+	   				$strWidget.=$this->widgetUsuarios($idCliente,$idUsuario);
+	   			break;
 	   		}
 		}
    		//echo htmlentities($strWidget);
    		return $strWidget;
    	}
+   	/*
+   	*
+   	*/
+   	public function widgetUsuarios($idCliente,$idUsuario){
+   		$mensaje="";
+      	$objDb=$this->iniciarConexionDb();
+      	$objDb->sqlQuery("SET NAMES 'utf8'");
+   		$sqlUsuarios="SELECT ID_USUARIO,NOMBRE_COMPLETO FROM ADM_USUARIOS WHERE ID_CLIENTE='".$idCliente."'";
+   		$resUsuarios=$objDb->sqlQuery($sqlUsuarios);
+   		if($objDb->sqlEnumRows($resUsuarios)!=0){
+   			while($rowUsuarios=$objDb->sqlFetchArray($resUsuarios)){
+	   			if($mensaje==""){
+	   				$mensaje=$rowUsuarios["ID_USUARIO"]."|".$rowUsuarios["NOMBRE_COMPLETO"];
+	   			}else{
+	   				$mensaje.="||".$rowUsuarios["ID_USUARIO"]."|".$rowUsuarios["NOMBRE_COMPLETO"];
+	   			}	
+   			}
+   		}else{
+   			$mensaje=0;
+   		}
+   		//return $mensaje;
+   		$usuarios=explode("||",$mensaje);
+   		$option="";
+   		for($i=0;$i<count($usuarios);$i++){
+			$listadoUsr=explode("|", $usuarios[$i]);
+			$option.="<option value='".$listadoUsr[0]."'>".$listadoUsr[1]."</option>";
+		}
+		$widgetUsuarios="<div class='contenedorWidgetUsuarios ui-corner-all'>
+			<div class='tituloWidgetUsuarios ui-state-default'>Selección de Usuarios:</div>
+			<p><input type='checkbox' id='widgetChkHabilitaUsuarios'><label for='widgetChkHabilitaUsuarios'>Seleccionar usuario</label></p>
+			<div style='margin-left:5px;margin-top:10px;'>
+				<select name='cboWidgetUsuarios' id='cboWidgetUsuarios' multiple='multiple'>
+				".$option."
+				</select>
+			</div>
+		</div>";
+		return $widgetUsuarios;
+   	}	
    	/*
    	*Widget Grupos/Usuarios
    	*/
