@@ -76,22 +76,27 @@ class widgets{
    		}else{
    			$mensaje=0;
    		}
-   		//return $mensaje;
-   		$usuarios=explode("||",$mensaje);
-   		$option="";
-   		for($i=0;$i<count($usuarios);$i++){
-			$listadoUsr=explode("|", $usuarios[$i]);
-			$option.="<option value='".$listadoUsr[0]."'>".$listadoUsr[1]."</option>";
-		}
-		$widgetUsuarios="<div class='contenedorWidgetUsuarios ui-corner-all'>
-			<div class='tituloWidgetUsuarios ui-state-default'>Selección de Usuarios:</div>
-			<p><input type='checkbox' id='widgetChkHabilitaUsuarios'><label for='widgetChkHabilitaUsuarios'>Seleccionar usuario</label></p>
-			<div style='margin-left:5px;margin-top:10px;'>
-				<select name='cboWidgetUsuarios' id='cboWidgetUsuarios' multiple='multiple'>
-				".$option."
-				</select>
-			</div>
-		</div>";
+   		if($mensaje!=0){
+			$usuarios=explode("||",$mensaje);
+	   		$option="";
+	   		for($i=0;$i<count($usuarios);$i++){
+				$listadoUsr=explode("|", $usuarios[$i]);
+				$option.="<option value='".$listadoUsr[0]."'>".$listadoUsr[1]."</option>";
+			}
+			$widgetUsuarios="<div class='contenedorWidgetUsuarios ui-corner-all'>
+				<div class='tituloWidgetUsuarios ui-state-default'>Selección de Usuarios:</div>
+				<p><input type='checkbox' id='widgetChkHabilitaUsuarios'><label for='widgetChkHabilitaUsuarios'>Seleccionar usuario</label></p>
+				<div style='margin-left:5px;margin-top:10px;'>
+					<select name='cboWidgetUsuarios' id='cboWidgetUsuarios'>
+						<option value='S/N' selected='selected'>Selecciona...</option>
+					".$option."
+					</select>
+				</div>
+			</div>";
+   		}else{
+   			$widgetUsuarios="Widget no definido";
+   		}
+   		
 		return $widgetUsuarios;
    	}	
    	/*

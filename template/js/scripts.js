@@ -28,10 +28,10 @@ function ajaxReportes(accion,c,parametros,divCarga,divResultado,tipoPeticion){
 			controladorAccionesReportes(accion,data,divResultado);
 		},
 		timeout:90000000,
-		error:function(data) {
+		error:function(error) {
 		    $("#"+divCarga).hide();
 		    $("#error").show();
-		    $("#error_mensaje").html(data);
+		    $("#error_mensaje").html(error);
 		}
 	});
 }

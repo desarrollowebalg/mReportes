@@ -1,10 +1,9 @@
 <?php
-	$userAdmin->u_logged();
 	/*
 	*CONFIGURACION DE LAS VARIABLES PARA LAS CLAUSULA WHERE DE LAS CONSULTAS
 	*/
 	$configuracionParametros = array(
-		"@USUARIOSISTEMA"	=>	$userAdmin->user_info['ID_USUARIO'],
+		"@USUARIOSISTEMA"	=>	"USUARIOSISTEMA",
 		"@FECHAINICIAL"		=>	"widgetFechaInicial",
 		"@HORAINICIAL"		=>	"widgetCboHoraInicial_1",
 		"@MININICIAL"		=>	"widgetCboHoraFinal_1",

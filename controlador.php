@@ -48,16 +48,20 @@ if($_SERVER["HTTP_REFERER"]==""){
 			}
 		break;
 		case "mostrarPlantillaReporte":
-			echo "<pre>";
+			/*echo "<pre>";
 			print_r($_POST);
-			echo "</pre>";
+			echo "</pre>";*/
 			$tpl->set_filenames(array('controlador' => 'tPlantillaReporte'));//instancia de la plantilla
+
 			$componentes=$objR->extraerWidgetsReporte($_POST["idReporte"]);//se extraen los componentes del reporte
+			
 			$componentes=explode("|||",$componentes);//se descomponen para invocarse y traer el HTML de cada componente
+			
 			$widgets="";
 			$elementosAnalizar="";
 			for($i=0;$i<$tot=count($componentes);$i++){//se recorren 
 				$elementosComponentes=explode("||",$componentes[$i]);
+
 				$parametrosWidget=explode("|",$elementosComponentes[1]);
 				($widgets=="") ? $widgets.=$elementosComponentes[0] : $widgets.=",".$elementosComponentes[0];
 				for($j=0;$j<count($parametrosWidget);$j++){
@@ -81,10 +85,10 @@ if($_SERVER["HTTP_REFERER"]==""){
 	switch($_GET["action"]){
 		case "mostrarReporte":
 			/*echo "<pre>";
-			print_r($_POST);
+			print_r($_GET);
 			echo "</pre>";*/
 
-			$objR->construyeSQLReporte($_GET["parametros"],$_GET["elementosAnalizar"]);
+			$objR->construyeSQLReporte($_GET["parametros"],$_GET["elementosAnalizar"],$_GET["idCliente"],$_GET["idUsuario"]);
 
 		break;
 	}

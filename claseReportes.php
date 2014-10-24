@@ -10,6 +10,7 @@
 class reportes{
 	private $objDb;
 	private $objBdG;
+	private $conn;
 	private $host;
 	private $port;
 	private $bname;
@@ -17,6 +18,8 @@ class reportes{
 	private $pass;
 	private $elementos 	=	array();
 	private $valores	=	array();
+	private $idCliente	= 	"";
+	private $idUsuario  =	"";
 
 	function __construct() {
   		include "config/database.php";
@@ -33,13 +36,36 @@ class reportes{
    	}
 
    	private function iniciarConexionDbGrid(){
-   		$objBdG=mysql_connect($this->host,$this->user,$this->pass);
+   		/*$objBdG=mysql_connect($this->host,$this->user,$this->pass);
    		if($objBdG){
    			@mysql_select_db($this->bname)or die("Error al conectar con la base de datos");
-   		}
+   		}*/
+   		$objBdG=new mysqli($this->host,$this->user,$this->pass,$this->bname);
    		return $objBdG;
    	}
 
+   	private function ejecutaOperacion($sqlReporte,$pag,$tipoSQL){
+   		$objDb=$this->iniciarConexionDb();
+      	$objDb->sqlQuery("SET NAMES 'utf8'");
+
+   		$registrosAMostrar="20";
+   		if($pag==0){
+   			$registrosAEmpezar=($pag-1) * $registrosAMostrar;
+   			$pagAct=$pag;
+   		}else{
+   			$registrosAEmpezar=0;
+   			$pagAct=1;
+   		}
+   		//se evalua el tipo de SQL
+   		if($tipoSQL=="Q"){
+
+   		}else if($tipoSQL=="P"){
+
+   		}
+   		//se ejecuta el Query o procedimiento
+
+
+   	}
 
    	private function evaluaParametro($strParametro){
 		include "configuracionVariables.php";
@@ -53,31 +79,36 @@ class reportes{
 		
 		for($i=0;$i<count($parametrosCampo);$i++){
 			
-
-			if(array_key_exists($parametrosCampo[$i], $configuracionParametros)){
-				/*echo "<br>Posicion valor: ".$posicionValor=$configuracionParametros[$parametrosCampo[$i]];
-				echo "<br>Indice valor: ".$indiceValor=array_search($posicionValor, $this->elementos);
-				echo "<br>valor: ".$valor.=$this->valores[$indiceValor];*/
-				$posicionValor=$configuracionParametros[$parametrosCampo[$i]];
-				$indiceValor=array_search($posicionValor, $this->elementos);
-				$valor.=$this->valores[$indiceValor];
-				if($parametrosCampo[$i]=="@FECHAINICIAL" || $parametrosCampo[$i]=="@FECHAFINAL"){
-					$valor.=" ";
-				}
-				if($parametrosCampo[$i]=="@HORAINICIAL" || $parametrosCampo[$i]=="@HORAFINAL"){
-					$valor.=":";
-				}
+			if($parametrosCampo[$i]=="@USUARIOSISTEMA"){
+				$valor=$this->idUsuario;
+			}else{
+				if(array_key_exists($parametrosCampo[$i], $configuracionParametros)){
+					/*echo "<br>Posicion valor: ".$posicionValor=$configuracionParametros[$parametrosCampo[$i]];
+					echo "<br>Indice valor: ".$indiceValor=array_search($posicionValor, $this->elementos);
+					echo "<br>valor: ".$valor.=$this->valores[$indiceValor];*/
+					$posicionValor=$configuracionParametros[$parametrosCampo[$i]];
+					$indiceValor=array_search($posicionValor, $this->elementos);
+					$valor.=$this->valores[$indiceValor];
+					if($parametrosCampo[$i]=="@FECHAINICIAL" || $parametrosCampo[$i]=="@FECHAFINAL"){
+						$valor.=" ";
+					}
+					if($parametrosCampo[$i]=="@HORAINICIAL" || $parametrosCampo[$i]=="@HORAFINAL"){
+						$valor.=":";
+					}
+				}	
 			}
+			
 
 		}
 		
 		/*echo "<pre>";
 		print_r($configuracionParametros);
 		echo "</pre>";*/
+		if($valor=="S/N"){ $valor="0"; }
 		return $valor;
    	}
 
-   	public function construyeSQLReporte($parametros,$elementosAnalizar){
+   	public function construyeSQLReporte($parametros,$elementosAnalizar,$idCliente,$idUsuario){
    		
    		$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");
@@ -99,7 +130,8 @@ class reportes{
 		print_r($valores);
 		echo "</pre>";*/
 		
-		
+		$this->idCliente=$idCliente;
+		$this->idUsuario=$idUsuario;
 
 		$select="";
 		$where=" WHERE ";
@@ -112,96 +144,145 @@ class reportes{
 		$resCuerpo=$objDb->sqlQuery($sqlCuerpo);
 		if($objDb->sqlEnumRows($resCuerpo)!=0){
 			$rowCuerpo=$objDb->sqlFetchArray($resCuerpo);
-			if($rowCuerpo["TIPO"]=="Q"){
+			
 				$select=$rowCuerpo["SQLTEXTO"];
+				$tipoQuery=$rowCuerpo["TIPO"];
 				//se procede a extraer el where
 				$sqlWhere="SELECT * FROM ADM_REPORTES_SQL_WHERE WHERE ID_SQL='".$rowCuerpo["ID_SQL"]."'";
 				$resWhere=$objDb->sqlQuery($sqlWhere);
 				//$i=0;
 				if($objDb->sqlEnumRows($resWhere) != 0){
-					while($rowWhere=$objDb->sqlFetchArray($resWhere)){
-						if($operadorTemporal==""){	
-							if($rowWhere["OPERADOR"]=="IN"){
+					
+					if($tipoQuery=="Q"){
 
-								//$where.=" (".$rowWhere["PARAMETRO"].")";
-								$where.=" ".$rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." (".$this->evaluaParametro($rowWhere["PARAMETRO"]).")";
+						while($rowWhere=$objDb->sqlFetchArray($resWhere)){
+							if($operadorTemporal==""){	
+								if($rowWhere["OPERADOR"]=="IN"){
+									//$where.=" (".$rowWhere["PARAMETRO"].")";
+									$where.=" ".$rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." (".$this->evaluaParametro($rowWhere["PARAMETRO"]).")";
+								}else{
+									$valor="";
+									//$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$rowWhere["PARAMETRO"]."'";
+									$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";	
+								}
+								$operadorTemporal=$rowWhere["OPERADOR"];
 							}else{
-								$valor="";
-								//$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$rowWhere["PARAMETRO"]."'";
-								$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";	
+								if($operadorTemporal=="BETWEEN"){
+									//$where.=" '".$rowWhere["PARAMETRO"]."'";
+									$where.=" '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";
+								}
+								$operadorTemporal="";
 							}
-							$operadorTemporal=$rowWhere["OPERADOR"];
-						}else{
-							if($operadorTemporal=="BETWEEN"){
-								//$where.=" '".$rowWhere["PARAMETRO"]."'";
-								$where.=" '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";
-							}
-							$operadorTemporal="";
-						}
 
-						if($rowWhere["CONECTOR"]!=""){
-							$where.=" ".$rowWhere["CONECTOR"]." ";
+							if($rowWhere["CONECTOR"]!=""){
+								$where.=" ".$rowWhere["CONECTOR"]." ";
+							}
+							//echo "<br />contador ".$i." ".$where;
+							//$i+=1;
 						}
-						//echo "<br />contador ".$i." ".$where;
-						//$i+=1;
+						$sqlGR=$select.$where;
+					}elseif($tipoQuery=="P"){
+						$where = "";
+						//echo "Armar el procedimiento<br><br>";
+						while($rowWhereP=$objDb->sqlFetchArray($resWhere)){
+							($where=="") ? $where.="'".$this->evaluaParametro($rowWhereP["PARAMETRO"])."'" : $where.=","."'".$this->evaluaParametro($rowWhereP["PARAMETRO"])."'";
+						}
+						//$rowWhereP=$objDb->sqlFetchArray($resWhere);
+						//echo "<br>".$where."<br><br>";
+						$sqlGR="CALL ".$select."(".$where.")";
+						//exit();
 					}
+
+
 				}else{
 					echo "Error al construir la Consulta SQL";	
 				}
-			}elseif($rowCuerpo["TIPO"]=="P"){
-
-			}
+			
 		}else{
 			echo "No se puede procesar el reporte por falta de extraccion SQL.";
 		}
 		//echo "<br />".
-		$sqlCommand=trim($select.$where);
-
-
-		$conn=$this->iniciarConexionDbGrid();//conexion hacia la base de datos
-		mysql_query("SET NAMES 'utf8'",$conn);// set your db encoding -- for ascent chars (if required)
-		include "public/libs/phpgridv1.5.2/lib/inc/jqgrid_dist.php";
-
-		$g = new jqgrid();//se instancia el objeto
-		// parametros de configuracion
-		//$grid["caption"] = "Alertas";
-		$grid["multiselect"] 	= false;
-		$grid["autowidth"] 		= true; // expand grid to screen width
-		//$grid["resizable"] 		= true;
-		//$grid["altRows"] 		= true;
-		//$grid["altclass"] 		="alternarRegistros";
-		$grid["scroll"] 		= false;
-		$grid["sortorder"]		="desc";
-		//$grid["rowNum"] 		= 10; // by default 20 
-		$g->set_options($grid);
-		$g->set_actions(array(  
-                        "add"=>false,
-                        "edit"=>false,
-                        "delete"=>false,
-                        "view"=>false,
-                        "rowactions"=>false,
-                        "export"=>false,
-                        "autofilter" => true,
-                        "search" => "advance",
-                        "inlineadd" => false,
-                        "showhidecolumns" => true
-                    )
-                );
-		//echo $sqlCommand;
-		$g->select_command = $sqlCommand;// comando SQL
-		$g->table = "HIST00000";// set database table for CRUD operations
-		//$g->set_columns($cols);
+		$sqlCommand=trim($sqlGR);
 		
-		//$g->select_command = "SELECT * FROM HIST00001 WHERE GPS_DATETIME BETWEEN '2014-01-01 00:00' AND '2014-10-22 23:59' AND COD_ENTITY IN (26,27,112,127) ";// comando SQL
-		$out = $g->render("reportesX");// render grid
-		echo $out;
+		//echo "1.- ".$sqlCommand;
+		//exit();
+		try{
+			$conn=$this->iniciarConexionDbGrid();//conexion hacia la base de datos
+			//mysql_query("SET NAMES 'utf8'",$conn);// set your db encoding -- for ascent chars (if required)
+			$conn->query("SET NAMES 'utf8'");
+//se ejecuta el query para extraer la tabla resultante
+		if($tipoQuery=="P"){
+			//echo $sqlGR;
+			//$resProcedure=$objDb->sqlQuery($sqlCommand);
+			//$resProcedure=@mysql_query($sqlCommand,$conn) or die(mysql_error());
+			$resProcedure=$conn->query($sqlCommand);
+			if(mysql_num_rows($resProcedure) != 0){
+				//echo $objDb->sqlEnumRows($resProcedure);
+				//$rowProcedure=$objDb->sqlFetchArray($resProcedure);
+				/*echo "<pre>";
+				print_r($rowProcedure);
+				echo "</pre>";*/
+				sleep(5);
+				$sqlCommand="ht_tmp";
+			}else{
+				echo "( 0 ) registros encontrados.";
+				exit();
+			}
+
+		}
+
+
+			include "public/libs/phpgridv1.5.2/lib/inc/jqgrid_dist.php";
+
+			$g = new jqgrid();//se instancia el objeto
+			// parametros de configuracion
+			//$grid["caption"] = "Alertas";
+			$grid["multiselect"] 	= false;
+			$grid["autowidth"] 		= true; // expand grid to screen width
+			//$grid["resizable"] 		= true;
+			//$grid["altRows"] 		= true;
+			//$grid["altclass"] 		="alternarRegistros";
+			$grid["scroll"] 		= false;
+			$grid["sortorder"]		="desc";
+			//$grid["rowNum"] 		= 10; // by default 20 
+			$g->set_options($grid);
+			$g->set_actions(array(  
+	                        "add"=>false,
+	                        "edit"=>false,
+	                        "delete"=>false,
+	                        "view"=>false,
+	                        "rowactions"=>false,
+	                        "export"=>false,
+	                        "autofilter" => true,
+	                        "search" => "advance",
+	                        "inlineadd" => false,
+	                        "showhidecolumns" => true
+	                    )
+	                );
+			
+			
+
+			if($tipoQuery=="Q"){
+				$g->select_command = $sqlCommand;// comando SQL
+			}
+			
+			$g->table = $sqlCommand;// set database table for CRUD operations
+			//$g->table = "ADM_USUARIOS";
+			//$g->set_columns($cols);
+			
+			//$g->select_command = "SELECT * FROM HIST00001 WHERE GPS_DATETIME BETWEEN '2014-01-01 00:00' AND '2014-10-22 23:59' AND COD_ENTITY IN (26,27,112,127) ";// comando SQL
+			$out = $g->render("reportesX");// render grid
+			echo $out;
+		}catch(Exception $e){
+			echo $e->getMessage();
+		}
    	}
 
    	public function extraerWidgetsReporte($idReporte){
    		$widgets="";
    		$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");
-   		$sqlWidgets="SELECT NOMBRE_PLANTILLA,CAMPOSVALORES
+   		$sqlWidgets="SELECT NOMBRE_PLANTILLA,CAMPOSVALORES,VALIDACION
 		FROM ADM_REPORTES_OPCION_WIDGETS INNER JOIN ADM_REPORTES_WIDGETS ON ADM_REPORTES_OPCION_WIDGETS.ID_WIDGET=ADM_REPORTES_WIDGETS.ID_WIDGET
 		WHERE ADM_REPORTES_OPCION_WIDGETS.ID_REPORTES_OPCION='".$idReporte."'";
 		$resWidgets=$objDb->sqlQuery($sqlWidgets);
@@ -209,9 +290,11 @@ class reportes{
 			$widgets="S/N";
 		}else{
 			while($rowWidgets=$objDb->sqlFetchArray($resWidgets)){
-				($widgets=="") ? $widgets.=$rowWidgets["NOMBRE_PLANTILLA"]."||".$rowWidgets["CAMPOSVALORES"] : $widgets.="|||".$rowWidgets["NOMBRE_PLANTILLA"]."||".$rowWidgets["CAMPOSVALORES"];
+				($widgets=="") ? $widgets.=$rowWidgets["NOMBRE_PLANTILLA"]."||".$rowWidgets["CAMPOSVALORES"]."||".$rowWidgets["VALIDACION"] : $widgets.="|||".$rowWidgets["NOMBRE_PLANTILLA"]."||".$rowWidgets["CAMPOSVALORES"]."||".$rowWidgets["VALIDACION"];
 			}
 		}
+		//echo $widgets;
+
 		return $widgets;
    	}
 

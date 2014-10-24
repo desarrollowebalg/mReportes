@@ -48,23 +48,13 @@ if($_SERVER["HTTP_REFERER"]==""){
 				case "usuarios":
 					$idCliente=$_POST["idCliente"];
 					$idUsuario=$_POST["idUsuario"];
-					echo $usuarios=$objW->extraerUsuarios($idCliente,$idUsuario);
-					$usuarios=explode("||",$usuarios);
-					echo "<pre>";
-					print_r($usuarios);
-					echo "</pre>";
-					
-					$tpl->set_filenames(array('controlador' => 'tWidgetUsuarios'));
-					for($i=0;$i<count($usuarios);$i++){
-						$listadoUsr=explode("|", $usuarios[$i]);
-						$option="<option value='".$listadoUsr[0]."'>".$listadoUsr[1]."</option>";
-						$tpl->assign_block_vars('listadoUsuarios',array(
-			            	'USUARIO' =>	$option
-			        	));
-					}
-					
 
-					$tpl->pparse('controlador');
+					$usuarios=$objW->widgetUsuarios($idCliente,$idUsuario);
+					$tpl->set_filenames(array('controladorWidgets' => 'tWidgetUsuarios'));
+					$tpl->assign_vars(array(
+						'USUARIOS'  => $usuarios
+					));
+					$tpl->pparse('controladorWidgets');
 				break;
 			}
 			
