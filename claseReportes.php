@@ -205,76 +205,11 @@ class reportes{
 		$sqlCommand=trim($sqlGR);
 		
 		//echo "1.- ".$sqlCommand;
-		//exit();
 		try{
-			$conn=$this->iniciarConexionDbGrid();//conexion hacia la base de datos
-			//mysql_query("SET NAMES 'utf8'",$conn);// set your db encoding -- for ascent chars (if required)
-			$conn->query("SET NAMES 'utf8'");
-//se ejecuta el query para extraer la tabla resultante
-		if($tipoQuery=="P"){
-			//echo $sqlGR;
-			//$resProcedure=$objDb->sqlQuery($sqlCommand);
-			//$resProcedure=@mysql_query($sqlCommand,$conn) or die(mysql_error());
-			$resProcedure=$conn->query($sqlCommand);
-			if(mysql_num_rows($resProcedure) != 0){
-				//echo $objDb->sqlEnumRows($resProcedure);
-				//$rowProcedure=$objDb->sqlFetchArray($resProcedure);
-				/*echo "<pre>";
-				print_r($rowProcedure);
-				echo "</pre>";*/
-				sleep(5);
-				$sqlCommand="ht_tmp";
-			}else{
-				echo "( 0 ) registros encontrados.";
-				exit();
-			}
-
-		}
-
-
-			include "public/libs/phpgridv1.5.2/lib/inc/jqgrid_dist.php";
-
-			$g = new jqgrid();//se instancia el objeto
-			// parametros de configuracion
-			//$grid["caption"] = "Alertas";
-			$grid["multiselect"] 	= false;
-			$grid["autowidth"] 		= true; // expand grid to screen width
-			//$grid["resizable"] 		= true;
-			//$grid["altRows"] 		= true;
-			//$grid["altclass"] 		="alternarRegistros";
-			$grid["scroll"] 		= false;
-			$grid["sortorder"]		="desc";
-			//$grid["rowNum"] 		= 10; // by default 20 
-			$g->set_options($grid);
-			$g->set_actions(array(  
-	                        "add"=>false,
-	                        "edit"=>false,
-	                        "delete"=>false,
-	                        "view"=>false,
-	                        "rowactions"=>false,
-	                        "export"=>false,
-	                        "autofilter" => true,
-	                        "search" => "advance",
-	                        "inlineadd" => false,
-	                        "showhidecolumns" => true
-	                    )
-	                );
-			
-			
-
-			if($tipoQuery=="Q"){
-				$g->select_command = $sqlCommand;// comando SQL
-			}
-			
-			$g->table = $sqlCommand;// set database table for CRUD operations
-			//$g->table = "ADM_USUARIOS";
-			//$g->set_columns($cols);
-			
-			//$g->select_command = "SELECT * FROM HIST00001 WHERE GPS_DATETIME BETWEEN '2014-01-01 00:00' AND '2014-10-22 23:59' AND COD_ENTITY IN (26,27,112,127) ";// comando SQL
-			$out = $g->render("reportesX");// render grid
-			echo $out;
+			$gridDatos=new gridDatos();
+			$gridDatos->mostrarDatos($sqlCommand);
 		}catch(Exception $e){
-			echo $e->getMessage();
+			echo $e->getMessage($sqlCommand);
 		}
    	}
 
