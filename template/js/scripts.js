@@ -84,5 +84,5 @@ function extraerReporte(parametros){
 	elementosAnalizar=$("#hdnElementosAnalizar").val();
 	var parametrosR="action=mostrarReporte&parametros="+parametros+"|||"+idReporteOpcion+"&idCliente="+idCliente+"&idUsuario="+idUsuario+"&elementosAnalizar="+elementosAnalizar;
 	//alert(parametrosR)
-	ajaxReportes("mostrarReporte","controlador",parametrosR,"cargador2","tabReporteResumen","GET");
+	ajaxReportes("mostrarReporte","controlador",parametrosR,"cargador2","tabReporteResumenDiv","GET");
 }

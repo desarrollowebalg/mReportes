@@ -91,6 +91,11 @@ if($_SERVER["HTTP_REFERER"]==""){
 			$objR->construyeSQLReporte($_GET["parametros"],$_GET["elementosAnalizar"],$_GET["idCliente"],$_GET["idUsuario"]);
 
 		break;
+		case "paginarReporte":
+			echo "<pre>";
+			print_r($_GET);
+			echo "</pre>";			
+		break;
 	}
 }
 ?>
