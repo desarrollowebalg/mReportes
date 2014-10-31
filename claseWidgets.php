@@ -48,8 +48,8 @@ class widgets{
 	   			case "tWidgetGruposUnidades":
 	   				$strWidget.=$this->widgetGruposUsuarios($idCliente,$idUsuario);
 	   			break;
-	   			case "tWidgetUsuarios":
-	   				$strWidget.=$this->widgetUsuarios($idCliente,$idUsuario);
+	   			case "tWidgetUsuariosEvidencias":
+	   				$strWidget.=$this->widgetUsuariosEvidencias($idCliente,$idUsuario);
 	   			break;
 	   		}
 		}
@@ -59,7 +59,7 @@ class widgets{
    	/*
    	*
    	*/
-   	public function widgetUsuarios($idCliente,$idUsuario){
+   	public function widgetUsuariosEvidencias($idCliente,$idUsuario){
    		$mensaje="";
       	$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");
@@ -87,7 +87,7 @@ class widgets{
 				<div class='tituloWidgetUsuarios ui-state-default'>Selección de Usuarios:</div>
 				<p><input type='checkbox' id='widgetChkHabilitaUsuarios'><label for='widgetChkHabilitaUsuarios'>Seleccionar usuario</label></p>
 				<div style='margin-left:5px;margin-top:10px;'>
-					<select name='cboWidgetUsuarios' id='cboWidgetUsuarios'>
+					<select name='cboWidgetUsuariosEvidencias' id='cboWidgetUsuariosEvidencias'>
 						<option value='S/N' selected='selected'>Selecciona...</option>
 					".$option."
 					</select>

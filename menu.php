@@ -55,6 +55,7 @@
 		$menuUR="";
 		$bandera=false;
 		//$tpl->set_filenames(array('controlador' => 'tNuevoMenu'));
+		$menuUR.="<div id='acordeonReportes'>";
 		for($i=0;$i<count($menuR);$i++){
 			$registro=explode("|",$menuR[$i]);
 			if($registro[1]!=$temp){
@@ -69,8 +70,9 @@
 			}					
 			$temp=$registro[1];
 		}
-		$menuUR.="</div>";
-		
+		$menuUR.="</div></div>";
+		//$MENUR.="<script type='text/javascript'> $(function() { $('#acordeonReportes').accordion(); });</script>";
+		//echo htmlentities($menuUR);
 		$tpl->assign_vars(array(
 			'MENUR'	=> $menuUR
 		));

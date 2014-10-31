@@ -11,6 +11,6 @@
 		"@HORAFINAL"		=>	"widgetCboHoraInicial_2",
 		"@MINFINAL"			=>	"widgetCboHoraFinal_2",
 		"@UNIDADES"			=>	"cboWidgetGruposUnidades",
-		"@USUARIOS"			=>	"cboWidgetUsuarios"
+		"@USUARIOSEVIDENCIAS"			=>	"cboWidgetUsuariosEvidencias"
 	);
 ?>
