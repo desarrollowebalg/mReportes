@@ -51,10 +51,130 @@ class widgets{
 	   			case "tWidgetUsuariosEvidencias":
 	   				$strWidget.=$this->widgetUsuariosEvidencias($idCliente,$idUsuario);
 	   			break;
+	   			case "tWidgetPdi":
+	   				$strWidget.=$this->widgetPDI($idCliente,$idUsuario);
+	   			break;
+	   			case "tWidgetGeocerca":
+					$strWidget.=$this->widgetGeocercas($idCliente,$idUsuario);
+	   			break;
+	   			case "tWidgetRecursoHumano":
+	   				$strWidget.=$this->widgetRecursoHumano($idCliente,$idUsuario);
+	   			break;
+	   			case "tWidgetCuestionarios":
+	   				$strWidget.=$this->widgetCuestionarios($idCliente,$idUsuario);
+	   			break;
 	   		}
 		}
    		//echo htmlentities($strWidget);
    		return $strWidget;
+   	}
+   	/*
+   	*
+   	*/
+   	public function widgetCuestionarios($idCliente,$idUsuario){
+   		$mensaje="";
+   		$objDb=$this->iniciarConexionDb();
+   		$objDb->sqlQuery("SET NAMES 'utf8'");
+   		$sqlCRM="SELECT ID_CUESTIONARIO,DESCRIPCION FROM ALG_BD_CORPORATE_MOVI.CRM2_CUESTIONARIOS WHERE COD_CLIENT='".$idCliente."' AND ACTIVO='S'";
+   		$res=$objDb->sqlQuery($sqlCRM);
+   		if($objDb->sqlEnumRows($res)!=0){
+   			$widgetCRM="<div class='contenedorWidgetUsuarios ui-corner-all'>
+						  <div class='tituloWidgetUsuarios ui-state-default'>Selección de Recurso Humano:</div>
+						  <!--<p><input type='checkbox' id='widgetChkHabilitaUsuarios'><label for='widgetChkHabilitaUsuarios'>Seleccionar usuario</label></p>-->
+						  <div style='margin-left:5px;margin-top:10px;'>
+							<select name='cboWidgetCuestionariosCliente' id='cboWidgetCuestionariosCliente' style='width:220px;'>
+								<option value='S/N' selected='selected'>Selecciona...</option>";
+			while($rowPdi=$objDb->sqlFetchArray($res)){
+				$widgetCRM.="<option value='".$rowPdi["ID_CUESTIONARIO"]."'>".$rowPdi["DESCRIPCION"]."</option>";
+			}
+			$widgetCRM.="</select>
+						</div>
+						</div>";				
+   		}else{
+   			$widgetCRM="<br>No hay Recursos Humanos asociados asociados con el cliente";
+   		}
+   		return $widgetCRM;
+   	}
+	/*
+   	*
+   	*/
+   	public function widgetRecursoHumano($idCliente,$idUsuario){
+   		$mensaje="";
+   		$objDb=$this->iniciarConexionDb();
+   		$objDb->sqlQuery("SET NAMES 'utf8'");
+   		$sqlRH="SELECT ID_OBJECT_MAP,DESCRIPCION FROM ALG_BD_CORPORATE_MOVI.ADM_GEOREFERENCIAS WHERE TIPO='RH' AND ID_CLIENTE='".$idCliente."';";
+   		$res=$objDb->sqlQuery($sqlRH);
+   		if($objDb->sqlEnumRows($res)!=0){
+   			$widgetRH="<div class='contenedorWidgetUsuarios ui-corner-all'>
+						  <div class='tituloWidgetUsuarios ui-state-default'>Selección de Recurso Humano:</div>
+						  <!--<p><input type='checkbox' id='widgetChkHabilitaUsuarios'><label for='widgetChkHabilitaUsuarios'>Seleccionar usuario</label></p>-->
+						  <div style='margin-left:5px;margin-top:10px;'>
+							<select name='cboWidgetRecursoHumanoCliente' id='cboWidgetRecursoHumanoCliente' style='width:220px;'>
+								<option value='S/N' selected='selected'>Selecciona...</option>";
+			while($rowPdi=$objDb->sqlFetchArray($res)){
+				$widgetRH.="<option value='".$rowPdi["ID_OBJECT_MAP"]."'>".$rowPdi["DESCRIPCION"]."</option>";
+			}
+			$widgetRH.="</select>
+						</div>
+						</div>";				
+   		}else{
+   			$widgetRH="<br>No hay Recursos Humanos asociados asociados con el cliente";
+   		}
+   		return $widgetRH;
+   	}
+   	/*
+   	*
+   	*/
+   	public function widgetGeocercas($idCliente,$idUsuario){
+		$mensaje="";
+   		$objDb=$this->iniciarConexionDb();
+   		$objDb->sqlQuery("SET NAMES 'utf8'");
+   		$sqlGEO="SELECT ID_OBJECT_MAP,DESCRIPCION FROM ALG_BD_CORPORATE_MOVI.ADM_GEOREFERENCIAS WHERE TIPO='C' AND ID_CLIENTE='".$idCliente."';";
+   		$res=$objDb->sqlQuery($sqlGEO);
+   		if($objDb->sqlEnumRows($res)!=0){
+   			$widgetGeo="<div class='contenedorWidgetUsuarios ui-corner-all'>
+						  <div class='tituloWidgetUsuarios ui-state-default'>Selección de Geocerca:</div>
+						  <!--<p><input type='checkbox' id='widgetChkHabilitaUsuarios'><label for='widgetChkHabilitaUsuarios'>Seleccionar usuario</label></p>-->
+						  <div style='margin-left:5px;margin-top:10px;'>
+							<select name='cboWidgetGeocercaCliente' id='cboWidgetGeocercaCliente' style='width:220px;'>
+								<option value='S/N' selected='selected'>Selecciona...</option>";
+			while($rowPdi=$objDb->sqlFetchArray($res)){
+				$widgetGeo.="<option value='".$rowPdi["ID_OBJECT_MAP"]."'>".$rowPdi["DESCRIPCION"]."</option>";
+			}
+			$widgetGeo.="</select>
+						</div>
+						</div>";				
+   		}else{
+   			$widgetGeo="<br>No hay Geocercas asociadas con el cliente";
+   		}
+   		return $widgetGeo;
+   	}
+   	/*
+   	*
+   	*/
+   	public function widgetPDI($idCliente,$idUsuario){
+   		$mensaje="";
+   		$objDb=$this->iniciarConexionDb();
+   		$objDb->sqlQuery("SET NAMES 'utf8'");
+   		$sqlPdi="SELECT ID_OBJECT_MAP,DESCRIPCION FROM ALG_BD_CORPORATE_MOVI.ADM_GEOREFERENCIAS WHERE TIPO='G' AND ID_CLIENTE='".$idCliente."';";
+   		$res=$objDb->sqlQuery($sqlPdi);
+   		if($objDb->sqlEnumRows($res)!=0){
+   			$widgetPdi="<div class='contenedorWidgetUsuarios ui-corner-all'>
+						  <div class='tituloWidgetUsuarios ui-state-default'>Selección de Geopunto:</div>
+						  <!--<p><input type='checkbox' id='widgetChkHabilitaUsuarios'><label for='widgetChkHabilitaUsuarios'>Seleccionar usuario</label></p>-->
+						  <div style='margin-left:5px;margin-top:10px;'>
+							<select name='cboWidgetPDICliente' id='cboWidgetPDICliente' style='width:220px;'>
+								<option value='S/N' selected='selected'>Selecciona...</option>";
+			while($rowPdi=$objDb->sqlFetchArray($res)){
+				$widgetPdi.="<option value='".$rowPdi["ID_OBJECT_MAP"]."'>".$rowPdi["DESCRIPCION"]."</option>";
+			}
+			$widgetPdi.="</select>
+						</div>
+						</div>";				
+   		}else{
+   			$widgetPdi="<br>No hay Geopuntos asociados con el cliente";
+   		}
+   		return $widgetPdi;
    	}
    	/*
    	*

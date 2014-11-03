@@ -63,15 +63,14 @@
 					$menuUR.="</div>";
 					$bandera=false;
 				}
-				$menuUR.="<h3><span style='margin-left:15px;'>".$registro[1]."</span></h3><div><p><a href='#' onclick='cargaElementosReporte(\"".$registro[3]."\")'>".$registro[2]."</a></p>";
+				$menuUR.="<h3><span style='margin-left:15px;'>".$registro[1]."</span></h3><div><div class='opcReporte' onclick='cargaElementosReporte(\"".$registro[3]."\")'>".$registro[2]."</div>";
 				$bandera=true;
 			}else{
-				$menuUR.="<p><a href='#' onclick='cargaElementosReporte(\"".$registro[3]."\")'>".$registro[2]."</a></p>";
+				$menuUR.="<div class='opcReporte' onclick='cargaElementosReporte(\"".$registro[3]."\")'>".$registro[2]."</div>";
 			}					
 			$temp=$registro[1];
 		}
 		$menuUR.="</div></div>";
-		//$MENUR.="<script type='text/javascript'> $(function() { $('#acordeonReportes').accordion(); });</script>";
 		//echo htmlentities($menuUR);
 		$tpl->assign_vars(array(
 			'MENUR'	=> $menuUR
