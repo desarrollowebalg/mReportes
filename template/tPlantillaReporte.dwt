@@ -75,7 +75,7 @@
 		parametros="";
 	}	
 </script>
-<div id="idContenedorReportesWidgets" style="border:1px solid #FF0000;width:99.2%;height:98.5%;position:relative;margin:3px;">
+<div id="idContenedorReportesWidgets" style="border:1px solid #FF0000;width:99.2%;height:99.3%;position:relative;margin:0px;">
 	<div id="idContenedorAreaComponentesWidgets" class="ui-corner-all" style="margin:5px;border:1px solid #A9D0F5;width:98.7%;height:30%;position:relative;">
 		<div id="idAreaComponentesWidget" style="border:0px solid #A9D0F5;width:100%;height:78%;z-index:9;overflow:auto;">
 			{WIDGETS}
@@ -87,15 +87,13 @@
 			<input type="button" id="generarReporte" value="Generar Reporte" class="ui-state-default ui-corner-all" style="height:25px;padding:3px;margin-top:4px;float:right;margin-right:5px;" />
 		</div>
 	</div>
-	<div id="idContenedorTabsDetalleReporte" style="margin:5px;border:1px solid #FF0000;width:98.7%;height:66.5%;">
+	<div id="idContenedorTabsDetalleReporte" style="position:relative;margin:5px;border:1px solid #FF0000;width:98.7%;height:66.5%;">
 		<div id="tabsContenedorGeneradorReportes">
 			<ul>
 				<li><a href="#tabReporteResumen">Resúmen</a></li>
 				<!--<li><a href="#tabReporteDetalle">Detalle</a></li>-->
 			</ul>
-			<div id="tabReporteResumen" style="height:50%;overflow:auto;">
-				<!--<iframe src="./libs/manejadorGridPasarela.php" name="paginadorReportes" frameborder="1" width="90%" height="250" scroolinh="yes">Texto para cuando el navegador no conoce la etiqueta iframe</iframe>-->
-			</div>
+			<div id="tabReporteResumen" style="overflow:auto;"></div>
 			<!--<div id="tabReporteDetalle" style="height:50%;overflow:auto;">
 				<p>Morbi tincidunt, dui sit amet facilisis feugiat, odio metus gravida ante, ut pharetra massa metus id nunc. Duis scelerisque molestie turpis. Sed fringilla, massa eget luctus malesuada, metus eros molestie lectus, ut tempus eros massa ut dolor. Aenean aliquet fringilla sem. Suspendisse sed ligula in ligula suscipit aliquam. Praesent in eros vestibulum mi adipiscing adipiscing. Morbi facilisis. Curabitur ornare consequat nunc. Aenean vel metus. Ut posuere viverra nulla. Aliquam erat volutpat. Pellentesque convallis. Maecenas feugiat, tellus pellentesque pretium posuere, felis lorem euismod felis, eu ornare leo nisi vel felis. Mauris consectetur tortor et purus.</p>
 			</div>-->
