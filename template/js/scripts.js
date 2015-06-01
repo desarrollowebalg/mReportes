@@ -46,6 +46,9 @@ function controladorAccionesReportes(accion,datos,divResultado){
 		break;
 		case "mostrarReporte":
 			$("#"+divResultado).show().html(datos);
+			//SE ENVIA EL RESULTADO A LA FUNCION JAVASCRIPT ALOJADA EN EL ARCHIVO JAVASCRIPT QUE VA A MANEJAR EL FLUJO DEL PINTADO DE LOS RESULTADOS
+			pintarResultadosGridReporte(datos);
+			//FIN DEL LLAMADO A LA FUNCION
 		break;
     }
 }
@@ -84,5 +87,5 @@ function extraerReporte(parametros){
 	elementosAnalizar=$("#hdnElementosAnalizar").val();
 	var parametrosR="action=mostrarReporte&parametros="+parametros+"|||"+idReporteOpcion+"&idCliente="+idCliente+"&idUsuario="+idUsuario+"&elementosAnalizar="+elementosAnalizar;
 	//alert(parametrosR)
-	ajaxReportes("mostrarReporte","controlador",parametrosR,"cargador2","tabReporteResumen","GET");
+	ajaxReportes("mostrarReporte","controlador",parametrosR,"cargador2","tabReporteResumen","POST");
 }

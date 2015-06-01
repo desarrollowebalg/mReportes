@@ -207,7 +207,8 @@ class reportes{
 		//echo "1.- ".$sqlCommand;
 		try{
 			$gridDatos=new gridDatos();
-			$gridDatos->mostrarDatos($sqlCommand);
+			//$gridDatos->mostrarDatos($sqlCommand);
+			$gridDatos->mostrarDatos2($sqlCommand);
 		}catch(Exception $e){
 			echo $e->getMessage($sqlCommand);
 		}
