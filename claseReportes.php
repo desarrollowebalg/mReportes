@@ -44,7 +44,7 @@ class reportes{
    		return $objBdG;
    	}
 
-   	private function ejecutaOperacion($sqlReporte,$pag,$tipoSQL){
+   /*	private function ejecutaOperacion($sqlReporte,$pag,$tipoSQL){
    		$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");
 
@@ -65,15 +65,15 @@ class reportes{
    		//se ejecuta el Query o procedimiento
 
 
-   	}
+   	}*/
 
    	private function evaluaParametro($strParametro){
 		include "configuracionVariables.php";
 		$valor="";
-		//echo "<br>".$strParametro;
+		echo "<br>".$strParametro;
 		//$strParametro=explode(" ",$strParametro);
 		$parametrosCampo=explode(" ",$strParametro);
-		/*echo "<pre>";
+	/*	echo "<pre>";
 		print_r($parametrosCampo);
 		echo "</pre>";*/
 		
@@ -109,106 +109,104 @@ class reportes{
    	}
 
    	public function construyeSQLReporte($parametros,$elementosAnalizar,$idCliente,$idUsuario){
-   		
-   		$objDb=$this->iniciarConexionDb();
+   		include "configuracionVariables.php";
+   			
+		$objDb=$this->iniciarConexionDb();
       	$objDb->sqlQuery("SET NAMES 'utf8'");
 		//se separan los parametros de la opcion del reporte
+		
+		//echo 	$parametros.'#'.$elementosAnalizar;
 		$parametros=explode("|||",$parametros);
 
 		/*echo "<pre>";
 		print_r($parametros);
 		echo "</pre>";*/
 		//se trabaja para el orden de los paramatros en el array
-		$elementos=explode(",",$elementosAnalizar);
-		$valores=explode("||",$parametros[0]);
-		$this->elementos=$elementos;
-		/*echo "<pre>";
+		
+		$elementos = explode(",",$elementosAnalizar);
+		$valores   = explode("||",$parametros[0]);
+	    $this->elementos = $elementos;
+        $this->valores=$valores;
+		
+	/*	echo "<pre>";
 		print_r($elementos);
-		echo "</pre>";*/
-		$this->valores=$valores;
-		/*echo "<pre>";
+		echo "</pre>";
+				
+		echo "<pre>";
 		print_r($valores);
 		echo "</pre>";*/
+		
+		
 		
 		$this->idCliente=$idCliente;
 		$this->idUsuario=$idUsuario;
 
-		$select="";
+		/*$select="";
 		$where=" WHERE ";
-		$operadorTemporal="";
-		//se extrae el cuerpo SQL
-		$sqlCuerpo="SELECT ID_SQL,SQLTEXTO,TIPO
-		FROM ADM_REPORTES_OPCION_SQL INNER JOIN ADM_REPORTES_SQL ON ADM_REPORTES_OPCION_SQL.ID_REPORTES_SQL=ADM_REPORTES_SQL.ID_SQL
-		WHERE ADM_REPORTES_OPCION_SQL.ID_REPORTES_OPCION='".$parametros[1]."'";
+		$operadorTemporal="";*/
+	
+		$cadena = '';
+		$arregloFinal = array();
+		$arregloFinal = reconstruyeArreglo($this->elementos,$this->valores,$this->idCliente,$this->idUsuario);
 		
+	//	echo print_r($arregloFinal);
+		//***************************************************************************************************************  se extrae el cuerpo SQL
+		
+		/* $sqlCuerpo="SELECT ID_SQL,SQLTEXTO,TIPO
+		FROM ADM_REPORTES_OPCION_SQL INNER JOIN ADM_REPORTES_SQL ON ADM_REPORTES_OPCION_SQL.ID_REPORTES_SQL=ADM_REPORTES_SQL.ID_SQL
+		WHERE ADM_REPORTES_OPCION_SQL.ID_REPORTES_OPCION='".$parametros[1]."'";*/
+		
+	 $sqlCuerpo="	SELECT  B.ID_SQL,
+					B.SQLTEXTO,
+					B.TIPO,
+					C.CAMPO,
+					C.OPERADOR,
+					C.PARAMETRO,
+					C.CONECTOR,
+					C.ORDEN_CAMPO
+
+		FROM  ADM_REPORTES_OPCION_SQL A
+		INNER JOIN ADM_REPORTES_SQL B ON A.ID_REPORTES_SQL=B.ID_SQL 
+		INNER JOIN ADM_REPORTES_SQL_WHERE C ON C.ID_SQL = B.ID_SQL 
+		WHERE A.ID_REPORTES_OPCION='".$parametros[1]."'";
+		
+//****************************************************************************************************************************************
 		$resCuerpo=$objDb->sqlQuery($sqlCuerpo);
+		$objDb->sqlEnumRows($resCuerpo).'<br>';
 		if($objDb->sqlEnumRows($resCuerpo)!=0){
-			$rowCuerpo=$objDb->sqlFetchArray($resCuerpo);
-			
-				$select=$rowCuerpo["SQLTEXTO"];
-				$tipoQuery=$rowCuerpo["TIPO"];
-				//se procede a extraer el where
-				$sqlWhere="SELECT * FROM ADM_REPORTES_SQL_WHERE WHERE ID_SQL='".$rowCuerpo["ID_SQL"]."'";
-				$resWhere=$objDb->sqlQuery($sqlWhere);
-				//$i=0;
-				if($objDb->sqlEnumRows($resWhere) != 0){
+			  while($row = $objDb->sqlFetchArray($resCuerpo)){
+				  
+			  
 					
-					if($tipoQuery=="Q"){
-
-						while($rowWhere=$objDb->sqlFetchArray($resWhere)){
-							if($operadorTemporal==""){	
-								if($rowWhere["OPERADOR"]=="IN"){
-									//$where.=" (".$rowWhere["PARAMETRO"].")";
-									$where.=" ".$rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." (".$this->evaluaParametro($rowWhere["PARAMETRO"]).")";
-								}else{
-									$valor="";
-									//$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$rowWhere["PARAMETRO"]."'";
-									$where .= $rowWhere["CAMPO"]." ".$rowWhere["OPERADOR"]." '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";	
-								}
-								$operadorTemporal=$rowWhere["OPERADOR"];
-							}else{
-								if($operadorTemporal=="BETWEEN"){
-									//$where.=" '".$rowWhere["PARAMETRO"]."'";
-									$where.=" '".$this->evaluaParametro($rowWhere["PARAMETRO"])."'";
-								}
-								$operadorTemporal="";
-							}
-
-							if($rowWhere["CONECTOR"]!=""){
-								$where.=" ".$rowWhere["CONECTOR"]." ";
-							}
-							//echo "<br />contador ".$i." ".$where;
-							//$i+=1;
-						}
-						$sqlGR=$select.$where;
-					}elseif($tipoQuery=="P"){
-						$where = "";
-						//echo "Armar el procedimiento<br><br>";
-						while($rowWhereP=$objDb->sqlFetchArray($resWhere)){
-							($where=="") ? $where.="'".$this->evaluaParametro($rowWhereP["PARAMETRO"])."'" : $where.=","."'".$this->evaluaParametro($rowWhereP["PARAMETRO"])."'";
-						}
-						//$rowWhereP=$objDb->sqlFetchArray($resWhere);
-						//echo "<br>".$where."<br><br>";
-						$sqlGR="CALL ".$select."(".$where.")";
-						//exit();
+					if(strtoupper($row['TIPO']) === 'Q'){//************************************************************************** tipo Q -> query
+					   if($cadena===""){
+						   $cadena = buscarCadena($arregloFinal,$row['SQLTEXTO'],'N').' WHERE '.str_replace("'"," ",$row['CAMPO']).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']).' '.$row['CONECTOR'].' ';
+					   
+					   }else{
+						   if($row['CONECTOR']!==NULL){
+							   $cadena .= str_replace("'"," ",$row['CAMPO']).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']).' '.$row['CONECTOR'].' '; 
+						   }else{
+							   $cadena .= str_replace("'"," ",$row['CAMPO']).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']);   
+						   }
+					   }
+					}else{  //******************************************************************************************************* tipo P -> procedimiento alcenado
+						 $cadena = $row['SQLTEXTO'].'('.buscarCadena($arregloFinal,$row['PARAMETRO']).');';
 					}
-
-
-				}else{
-					echo "Error al construir la Consulta SQL";	
-				}
+			  }
+			
 			
 		}else{
 			echo "No se puede procesar el reporte por falta de extraccion SQL.";
 		}
-		//echo "<br />".
-		$sqlCommand=trim($sqlGR);
+	  $sqlGR = $cadena;
+	// echo $sqlGR;
+	$sqlCommand=trim($sqlGR);
 		
-		//echo "1.- ".$sqlCommand;
+
 		try{
 			$gridDatos=new gridDatos();
-			//$gridDatos->mostrarDatos($sqlCommand);
-			$gridDatos->mostrarDatos2($sqlCommand);
+		   	$gridDatos->mostrarDatos($sqlCommand);
+
 		}catch(Exception $e){
 			echo $e->getMessage($sqlCommand);
 		}
@@ -274,6 +272,7 @@ class reportes{
 		}
 		return $mensaje;
    	}
+	
 
 }//fin de la clase
 ?>

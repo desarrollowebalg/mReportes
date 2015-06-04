@@ -63,6 +63,14 @@ class widgets{
 	   			case "tWidgetCuestionarios":
 	   				$strWidget.=$this->widgetCuestionarios($idCliente,$idUsuario);
 	   			break;
+				case "tWidgetSoloFecha":
+	   				$strWidget.=$this->widgetSoloFecha();
+	   			break;
+				case "tWidgetEquipos":
+	   				$strWidget.=$this->widgetEquipos();
+	   			break;
+				
+
 	   		}
 		}
    		//echo htmlentities($strWidget);
@@ -298,6 +306,47 @@ class widgets{
 			  </div>
 			</div>";
 		return $widgetFecha;
+   	}
+
+    /*
+	   SOLO FECHA
+	*/
+
+   	private function widgetSoloFecha(){
+   		
+		$widgetFecha="<div class='contenedorWidgetFecha ui-corner-all'>
+			<div class='tituloWidgetFecha ui-state-default'>Selección de fecha:</div>
+  			  <div class='fechaHoraCampo'>
+			    <label for='fechaInicial'>Fecha</label><input id='widgetFechaInicial' type='text' readonly='readonly'>&nbsp;&nbsp;
+			  </div>
+			</div>";
+		return $widgetFecha;
+   	}
+	
+	/* widget tipo de equipo*/
+	
+   	public function widgetEquipos(){
+   		$mensaje="";
+   		$objDb=$this->iniciarConexionDb();
+   		$objDb->sqlQuery("SET NAMES 'utf8'");
+   		$sqlCRM="SELECT COD_TYPE_EQUIPMENT,DESCRIPTION FROM ADM_EQUIPOS_TIPO ORDER BY DESCRIPTION";
+   		$res=$objDb->sqlQuery($sqlCRM);
+   		if($objDb->sqlEnumRows($res)!=0){
+   			$widgetCRM="<div class='contenedorWidgetUsuarios ui-corner-all'>
+						  <div class='tituloTipoEquipo ui-state-default'>Selección de Equipo:</div>
+						  <div style='margin-left:5px;margin-top:10px;'>
+							<select name='cboWidgetEquipo' id='cboWidgetEquipo' style='width:220px;'>
+								<option value='S/N' selected='selected'>Selecciona...</option>";
+			while($rowPdi=$objDb->sqlFetchArray($res)){
+				$widgetCRM.="<option value='".$rowPdi["COD_TYPE_EQUIPMENT"]."'>".$rowPdi["DESCRIPTION"]."</option>";
+			}
+			$widgetCRM.="</select>
+						</div>
+						</div>";				
+   		}else{
+   			$widgetCRM="<br>No hay equipos";
+   		}
+   		return $widgetCRM;
    	}
 
 }
