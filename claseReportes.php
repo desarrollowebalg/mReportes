@@ -180,13 +180,13 @@ class reportes{
 					
 					if(strtoupper($row['TIPO']) === 'Q'){//************************************************************************** tipo Q -> query
 					   if($cadena===""){
-						   $cadena = buscarCadena($arregloFinal,$row['SQLTEXTO'],'N').' WHERE '.str_replace("'"," ",$row['CAMPO']).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']).' '.$row['CONECTOR'].' ';
+						   $cadena = buscarCadena($arregloFinal,$row['SQLTEXTO'],'N').' WHERE '.str_replace("'"," ",buscarCadena($arregloFinal,$row['CAMPO'],$row['OPERADOR'])).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']).' '.$row['CONECTOR'].' ';
 					   
 					   }else{
 						   if($row['CONECTOR']!==NULL){
-							   $cadena .= str_replace("'"," ",$row['CAMPO']).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']).' '.$row['CONECTOR'].' '; 
+							   $cadena .= str_replace("'"," ",buscarCadena($arregloFinal,$row['CAMPO'],$row['OPERADOR'])).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']).' '.$row['CONECTOR'].' '; 
 						   }else{
-							   $cadena .= str_replace("'"," ",$row['CAMPO']).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']);   
+							   $cadena .= str_replace("'"," ",buscarCadena($arregloFinal,$row['CAMPO'],$row['OPERADOR'])).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']);   
 						   }
 					   }
 					}else{  //******************************************************************************************************* tipo P -> procedimiento alcenado
@@ -199,7 +199,7 @@ class reportes{
 			echo "No se puede procesar el reporte por falta de extraccion SQL.";
 		}
 	  $sqlGR = $cadena;
-	// echo $sqlGR;
+	 echo $sqlGR;
 	$sqlCommand=trim($sqlGR);
 		
 
