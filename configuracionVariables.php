@@ -22,7 +22,8 @@ function reconstruyeArreglo($elementos,$valores,$idCliente,$idUsuario){
 		"@CODEQUIPO" 		    =>	"cboWidgetEquipo",
 		"@LASTCLIENTE"          =>  obtenerHistLastNombre($idCliente,'l'),
 		"@HISTCLIENTE"          =>  obtenerHistLastNombre($idCliente,'h'),
-		"@IDCLIENTE"            =>  $idCliente
+		"@IDCLIENTE"            =>  $idCliente,
+		"@LIMITEREGISTROS"	    =>	"widgetCboLimiteRegistros"
 	);
 	
   foreach($configuracionParametros as $indice =>$valor){	 

@@ -128,7 +128,7 @@ class reportes{
 	    $this->elementos = $elementos;
         $this->valores=$valores;
 		
-	/*	echo "<pre>";
+/*		echo "<pre>";
 		print_r($elementos);
 		echo "</pre>";
 				
@@ -156,7 +156,7 @@ class reportes{
 		FROM ADM_REPORTES_OPCION_SQL INNER JOIN ADM_REPORTES_SQL ON ADM_REPORTES_OPCION_SQL.ID_REPORTES_SQL=ADM_REPORTES_SQL.ID_SQL
 		WHERE ADM_REPORTES_OPCION_SQL.ID_REPORTES_OPCION='".$parametros[1]."'";*/
 		
-	 $sqlCuerpo="	SELECT  B.ID_SQL,
+	  $sqlCuerpo="	SELECT  B.ID_SQL,
 					B.SQLTEXTO,
 					B.TIPO,
 					C.CAMPO,
@@ -176,8 +176,8 @@ class reportes{
 		if($objDb->sqlEnumRows($resCuerpo)!=0){
 			  while($row = $objDb->sqlFetchArray($resCuerpo)){
 				  
-			  
-					
+			   
+					$variableEnvio = $row['ID_SQL'];
 					if(strtoupper($row['TIPO']) === 'Q'){//************************************************************************** tipo Q -> query
 					   if($cadena===""){
 						   $cadena = buscarCadena($arregloFinal,$row['SQLTEXTO'],'N').' WHERE '.str_replace("'"," ",buscarCadena($arregloFinal,$row['CAMPO'],$row['OPERADOR'])).' '.$row['OPERADOR'].' '.buscarCadena($arregloFinal,$row['PARAMETRO'],$row['OPERADOR']).' '.$row['CONECTOR'].' ';
@@ -198,19 +198,39 @@ class reportes{
 		}else{
 			echo "No se puede procesar el reporte por falta de extraccion SQL.";
 		}
-	  $sqlGR = $cadena;
-	 echo $sqlGR;
-	$sqlCommand=trim($sqlGR);
-		
+
+	  $sqlCommand=trim($cadena);
 
 		try{
-			$gridDatos=new gridDatos();
-		   	$gridDatos->mostrarDatos($sqlCommand);
+			$x_res =  $this->guardaSqlGenerado($sqlCommand,$variableEnvio,$valores[count($valores)-1]);	
+			
+			if($x_res == 1){
+				// funcion pinta;
+			}else{
+			   echo "fallo en el guardado de sql generado ".$x_res;	
+			}
+	    //		$gridDatos=new gridDatos();
+		//   	$gridDatos->mostrarDatos($sqlCommand);
 
 		}catch(Exception $e){
 			echo $e->getMessage($sqlCommand);
 		}
    	}
+
+
+  public function guardaSqlGenerado($sql,$idSql,$limite){
+	//  echo $sql.''.$variableEnvio.''.$limite;
+	    $objDb=$this->iniciarConexionDb();
+      	$objDb->sqlQuery("SET NAMES 'utf8'");
+   		$sqlWidgets='UPDATE ADM_REPORTES_SQL SET ULTIMO_SQL_GENERADO="'.$sql.'" WHERE ID_SQL = '.$idSql;
+		$resWidgets=$objDb->sqlQuery($sqlWidgets);
+		if($resWidgets){
+			$respuesta = 1;
+		}else{
+		    $respuesta = $sqlWidgets;	
+		}
+	  return $respuesta;
+  }
 
    	public function extraerWidgetsReporte($idReporte){
    		$widgets="";

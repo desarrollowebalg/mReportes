@@ -84,7 +84,24 @@
 			<input type="hidden" name="hdnWidgetsTipo" id="hdnWidgetsTipo" value="{WIDGETSTIPO}" />
 			<input type="hidden" name="hdnElementosAnalizar" id="hdnElementosAnalizar" value="{ELEM_ANALIZAR}" />
 			<input type="hidden" name="hdnIdReportesOpcion" id="hdnIdReportesOpcion" value="{IDREPORTEOPCION}" />
-			<input type="button" id="generarReporte" value="Generar Reporte" class="ui-state-default ui-corner-all" style="height:25px;padding:3px;margin-top:4px;float:right;margin-right:5px;" />
+            <div align="right" style=" border:#333333 solid 0px;">
+             <table border="0">  
+               <tr> 
+                  <td>&nbsp;&nbsp;&nbsp;&nbsp;
+                  Cantidad de registros a visualizar &nbsp;&nbsp;
+                  <select name="widgetCboLimiteRegistros" id="widgetCboLimiteRegistros">
+                  <option value="20">20</option>
+                  <option value="40">40</option>
+                  <option value="60">60</option>
+                  <option value="80">80</option>                                          
+                </select>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                </td><td>
+                <input type="button" id="generarReporte" value="Generar Reporte" class="ui-state-default ui-corner-all" style="height:25px;padding:3px;margin-top:4px;float:right;margin-right:5px;" />
+                </td>
+               </tr> 
+                </table>
+            </div>
 		</div>
 	</div>
 	<div id="idContenedorTabsDetalleReporte" style="position:relative;margin:5px;border:1px solid #FF0000;width:98.7%;height:66.5%;">

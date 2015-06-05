@@ -72,6 +72,9 @@ if($_SERVER["HTTP_REFERER"]==""){
 			$strWidgets=$objW->obtenerWidget($widgets,$_POST["idCliente"],$_POST["idUsuario"]);
 			$idReporteOpcion=$_POST["idReporte"];
 			//se asignan las diferentes variables
+		
+			$elementosAnalizar = $elementosAnalizar.',widgetCboLimiteRegistros';
+		
 			$tpl->assign_vars(array(
 				'WIDGETS'			=> $strWidgets,
 				'WIDGETSTIPO'		=> $widgets,
