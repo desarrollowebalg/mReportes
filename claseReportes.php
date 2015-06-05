@@ -199,6 +199,7 @@ class reportes{
 			echo "No se puede procesar el reporte por falta de extraccion SQL.";
 		}
 
+
 	  $sqlCommand=trim($cadena);
 
 		try{
@@ -211,7 +212,6 @@ class reportes{
 			}
 	    //		$gridDatos=new gridDatos();
 		//   	$gridDatos->mostrarDatos($sqlCommand);
-
 		}catch(Exception $e){
 			echo $e->getMessage($sqlCommand);
 		}
