@@ -45,7 +45,7 @@ function controladorAccionesReportes(accion,datos,divResultado){
 			$("#"+divResultado).show().html(datos);
 		break;
 		case "mostrarReporte":
-			$("#"+divResultado).show().html(datos);
+			//$("#"+divResultado).show().html(datos);
 			//SE ENVIA EL RESULTADO A LA FUNCION JAVASCRIPT ALOJADA EN EL ARCHIVO JAVASCRIPT QUE VA A MANEJAR EL FLUJO DEL PINTADO DE LOS RESULTADOS
 			pintarResultadosGridReporte(datos);
 			//FIN DEL LLAMADO A LA FUNCION
